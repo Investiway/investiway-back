@@ -1,0 +1,72 @@
+version: '3.8'
+
+x-shared_environment: &shared_environment
+  IY_RMQ_HOST: fl-rabbitmq
+  IY_RMQ_PORT: 5672
+  IY_RABBITMQ_HOST: fl-rabbitmq
+  IY_RABBITMQ_PORT: 5672
+  IY_MONGO_HOST: fl-mongo
+  IY_MONGO_PORT: 27017
+  IY_MONGO_DB: fl
+  IY_REDIS_HOST: fl-redis
+  IY_REDIS_PORT: 6379
+  IY_BULL_USER: root
+  IY_BULL_PWD: root
+  
+  IY_GOOGLE_CLIENT_ID: 752795536488-fc86utrah9asfg7lgp71ag5h1fo58k60.apps.googleusercontent.com
+  IY_GOOGLE_CLIENT_SECRET: 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
+  IY_GOOGLE_REDIRECT_URI: http://localhost:8010/v1/auth/google/redirect
+  IY_FACEBOOK_APP_ID: 586992193429885
+  IY_FACEBOOK_APP_SECRET: e5127fcbdcae3558ff8f8a7d0f320dbd
+  IY_FACEBOOK_REDIRECT_URI: http://localhost:8010/v1/auth/facebook/redirect
+  IY_FRONTEND_REDIRECT_LOGIN: http://localhost:3434/auth?access_token=_1_&refresh_token=_2_
+  IY_JWT_REFRESH_SECRET: ti[8jCzsX5lY0yv
+  IY_JWT_REFRESH_EXPIRED: 2592000s
+  IY_JWT_ACCESS_SECRET: t}[8jCooOP5lY0y]
+  IY_JWT_ACCESS_EXPIRED: 3600s
+
+services:
+  iy-gateway:
+    image: iy-dev
+    build:
+      dockerfile: ./dev.node18.Dockerfile
+      context: .
+    environment:
+      <<: *shared_environment
+    ports:
+      - "8010:3000"
+    volumes:
+      - ../apps/investiway:/data/apps
+    
+  iy-rabbitmq:
+    image: rabbitmq:3.9.27-alpine
+    environment:
+      <<: *shared_environment
+    command: sh -c "rm -rf /etc/rabbimq/conf.d && rabbitmq-plugins enable rabbitmq_management && rabbitmq-server"
+    ports:
+      - "15672:15672"
+    volumes:
+      - ../conf/rabbitmq-dev:/etc/rabbitmq/
+        
+  iy-redis:
+    image: redis:7.0.7-alpine3.17
+    environment:
+      <<: *shared_environment
+    ports:
+      - "6379:6379"
+    command: redis-server /usr/local/etc/redis/redis.conf
+    volumes:
+      - ../conf/redis.dev.conf:/usr/local/etc/redis/redis.conf
+      - ../data/redis:/data
+        
+  iy-mongo:
+    image: mongo:6.0.3
+    command: mongod --quiet --logpath /dev/null
+    environment:
+      <<: *shared_environment
+    ports:
+      - "27017:27017"
+    volumes:
+      - ../conf/mongod.dev.conf:/etc/mongodb.conf
+      - ../data/mongo/log:/var/log/mongodb/
+      - ../data/mongo/data:/data/db

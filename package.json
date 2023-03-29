@@ -1,0 +1,26 @@
+{
+  "name": "100-like-distributed",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev:up": "docker-compose -f docker/docker-compose.dev.yaml up --abort-on-container-exit --remove-orphans",
+    "dev:halt": "docker-compose -f docker/docker-compose.dev.yaml down",
+    "dev:destroy": "docker-compose -f docker/docker-compose.dev.yaml rm -f",
+    "dev:log": "docker-compose -f docker/docker-compose.dev.yaml logs -f",
+    "dev:rmq": "docker-compose -f docker/docker-compose.dev.yaml restart fl-rabbitmq"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wawahuy/100-like-distributed.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wawahuy/100-like-distributed/issues"
+  },
+  "homepage": "https://github.com/wawahuy/100-like-distributed#readme",
+  "dependencies": {
+    "yarn": "^1.22.19"
+  }
+}

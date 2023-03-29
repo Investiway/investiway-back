@@ -1,15 +1,26 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import {ConfigModule} from "@nestjs/config";
+import { ServicesModule } from './services/services.module';
+import { ControllersModule } from './controllers/controllers.module';
+import {JwtModule} from "@nestjs/jwt";
+import {FacebookStrategy} from "./strategy/facebook.strategy";
+import {GoogleStrategy} from "./strategy/google.strategy";
+import {JwtAccessStrategy} from "./strategy/jwt-access.strategy";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true
-    })
+    }),
+    ServicesModule,
+    ControllersModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [
+    FacebookStrategy,
+    GoogleStrategy,
+    JwtAccessStrategy,
+    JwtAccessStrategy,
+  ],
 })
 export class AppModule {}

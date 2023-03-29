@@ -1,29 +1,29 @@
 version: '3.8'
 
 x-shared_environment: &shared_environment
-  IY_RMQ_HOST: fl-rabbitmq
+  IY_RMQ_HOST: iy-rabbitmq
   IY_RMQ_PORT: 5672
-  IY_RABBITMQ_HOST: fl-rabbitmq
+  IY_RABBITMQ_HOST: iy-rabbitmq
   IY_RABBITMQ_PORT: 5672
-  IY_MONGO_HOST: fl-mongo
+  IY_MONGO_HOST: iy-mongo
   IY_MONGO_PORT: 27017
-  IY_MONGO_DB: fl
-  IY_REDIS_HOST: fl-redis
+  IY_MONGO_DB: iy
+  IY_REDIS_HOST: iy-redis
   IY_REDIS_PORT: 6379
   IY_BULL_USER: root
   IY_BULL_PWD: root
   
   IY_GOOGLE_CLIENT_ID: 752795536488-fc86utrah9asfg7lgp71ag5h1fo58k60.apps.googleusercontent.com
   IY_GOOGLE_CLIENT_SECRET: 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
-  IY_GOOGLE_REDIRECT_URI: http://localhost:8010/v1/auth/google/redirect
+  IY_GOOGLE_REDIRECT_URI: http://localhost:8010/v1/auth/google_redirect
   IY_FACEBOOK_APP_ID: 586992193429885
   IY_FACEBOOK_APP_SECRET: e5127fcbdcae3558ff8f8a7d0f320dbd
-  IY_FACEBOOK_REDIRECT_URI: http://localhost:8010/v1/auth/facebook/redirect
+  IY_FACEBOOK_REDIRECT_URI: http://localhost:8010/v1/auth/facebook_redirect
   IY_FRONTEND_REDIRECT_LOGIN: http://localhost:3434/auth?access_token=_1_&refresh_token=_2_
   IY_JWT_REFRESH_SECRET: ti[8jCzsX5lY0yv
-  IY_JWT_REFRESH_EXPIRED: 2592000s
+  IY_JWT_REFRESH_EXPIRED: 365d
   IY_JWT_ACCESS_SECRET: t}[8jCooOP5lY0y]
-  IY_JWT_ACCESS_EXPIRED: 3600s
+  IY_JWT_ACCESS_EXPIRED: 2h
 
 services:
   iy-gateway:

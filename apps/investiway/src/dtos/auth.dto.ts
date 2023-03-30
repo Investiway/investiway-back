@@ -16,3 +16,7 @@ export class TokenGroup {
   accessToken: string;
   refreshToken: string;
 }
+
+export class JwtPayload {
+  id: string
+}

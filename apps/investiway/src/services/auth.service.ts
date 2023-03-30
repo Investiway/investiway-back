@@ -5,6 +5,7 @@ import {Injectable} from "@nestjs/common";
 import {InjectModel} from "@nestjs/mongoose";
 import {User, UserDocument} from "../schema/user.schema";
 import {FilterQuery, Model} from "mongoose";
+import {EAuthError} from "../constants/auth.constant";
 
 @Injectable()
 export class AuthService {
@@ -72,7 +73,13 @@ export class AuthService {
       this.configService.get('IY_FRONTEND_REDIRECT_LOGIN');
     return redirect.replace('_1_', token.accessToken).replace('_2_', token.refreshToken);
   }
-  
+
+  createFeUrlErrorRedirect(code: EAuthError) {
+    const redirect =
+      this.configService.get('IY_FRONTEND_REDIRECT_LOGIN_FAILED');
+    return redirect.replace('_1_', code);
+  }
+
   signAccess(id: any) {
     return this.jwtService.signAsync({ id }, {
       secret: this.configService.get('IY_JWT_ACCESS_SECRET'),

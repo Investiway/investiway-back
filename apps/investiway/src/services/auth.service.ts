@@ -40,10 +40,10 @@ export class AuthService {
   
   async loginWithFacebook(data: FacebookAuthDto | GoogleAuthDto): Promise<TokenGroup> {
     const filter: FilterQuery<Partial<UserDocument>> = {};
-    if ((<any>data).googleId) {
+    if ((<GoogleAuthDto>data).googleId) {
       filter.googleId = (<GoogleAuthDto>data).googleId
     }
-    if ((<any>data).facebookId) {
+    if ((<FacebookAuthDto>data).facebookId) {
       filter.facebookId = (<FacebookAuthDto>data).facebookId;
     }
     let user = await this.userModel.findOne(filter);

@@ -6,6 +6,7 @@ import {JwtModule} from "@nestjs/jwt";
 import {FacebookStrategy} from "./strategy/facebook.strategy";
 import {GoogleStrategy} from "./strategy/google.strategy";
 import {JwtAccessStrategy} from "./strategy/jwt-access.strategy";
+import {JwtRefreshStrategy} from "./strategy/jwt-refresh.strategy";
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import {JwtAccessStrategy} from "./strategy/jwt-access.strategy";
     FacebookStrategy,
     GoogleStrategy,
     JwtAccessStrategy,
-    JwtAccessStrategy,
+    JwtRefreshStrategy,
   ],
 })
 export class AppModule {}

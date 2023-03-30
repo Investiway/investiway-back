@@ -1,5 +1,6 @@
 version: '3.8'
 
+
 x-shared_environment: &shared_environment
   IY_RMQ_HOST: iy-rabbitmq
   IY_RMQ_PORT: 5672
@@ -10,20 +11,21 @@ x-shared_environment: &shared_environment
   IY_MONGO_DB: iy
   IY_REDIS_HOST: iy-redis
   IY_REDIS_PORT: 6379
-  IY_BULL_USER: root
-  IY_BULL_PWD: root
+  IY_BULL_USER: ${IY_BULL_USER}
+  IY_BULL_PWD: ${IY_BULL_PWD}
   
-  IY_GOOGLE_CLIENT_ID: 752795536488-fc86utrah9asfg7lgp71ag5h1fo58k60.apps.googleusercontent.com
-  IY_GOOGLE_CLIENT_SECRET: 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
-  IY_GOOGLE_REDIRECT_URI: http://localhost:8010/v1/auth/google_redirect
-  IY_FACEBOOK_APP_ID: 586992193429885
-  IY_FACEBOOK_APP_SECRET: e5127fcbdcae3558ff8f8a7d0f320dbd
-  IY_FACEBOOK_REDIRECT_URI: http://localhost:8010/v1/auth/facebook_redirect
-  IY_FRONTEND_REDIRECT_LOGIN: http://localhost:3434/auth?access_token=_1_&refresh_token=_2_
-  IY_JWT_REFRESH_SECRET: ti[8jCzsX5lY0yv
-  IY_JWT_REFRESH_EXPIRED: 365d
-  IY_JWT_ACCESS_SECRET: t}[8jCooOP5lY0y]
-  IY_JWT_ACCESS_EXPIRED: 2h
+  IY_GOOGLE_CLIENT_ID: ${IY_GOOGLE_CLIENT_ID}
+  IY_GOOGLE_CLIENT_SECRET: ${IY_GOOGLE_CLIENT_SECRET}
+  IY_GOOGLE_REDIRECT_URI: http://${IY_BE_HOST}:${IY_BE_PORT}/v1/auth/google_redirect
+  IY_FACEBOOK_APP_ID: ${IY_FACEBOOK_APP_ID}
+  IY_FACEBOOK_APP_SECRET: ${IY_FACEBOOK_APP_SECRET}
+  IY_FACEBOOK_REDIRECT_URI: http://${IY_BE_HOST}:${IY_BE_PORT}/v1/auth/facebook_redirect
+  IY_FRONTEND_REDIRECT_LOGIN: ${IY_FRONTEND_REDIRECT_LOGIN}
+  IY_FRONTEND_REDIRECT_LOGIN_FAILED: ${IY_FRONTEND_REDIRECT_LOGIN_FAILED}
+  IY_JWT_REFRESH_SECRET: ${IY_JWT_REFRESH_SECRET}
+  IY_JWT_REFRESH_EXPIRED: ${IY_JWT_REFRESH_EXPIRED}
+  IY_JWT_ACCESS_SECRET: ${IY_JWT_ACCESS_SECRET}
+  IY_JWT_ACCESS_EXPIRED: ${IY_JWT_ACCESS_EXPIRED}
 
 services:
   iy-gateway:
@@ -31,10 +33,13 @@ services:
     build:
       dockerfile: ./dev.node18.Dockerfile
       context: .
+      args:
+        - gUser=${IY_H_NAME}
+        - gId=${IY_H_ID}
     environment:
       <<: *shared_environment
     ports:
-      - "8010:3000"
+      - "${IY_BE_PORT}:3000"
     volumes:
       - ../apps/investiway:/data/apps
     

@@ -3,8 +3,8 @@ FROM node:18.12-alpine3.17
 WORKDIR /data/apps
 
 # enter user
-ARG gUser=yuh
-ARG gId=1000
+ARG gUser
+ARG gId
 
 # remove user node
 RUN deluser --remove-home node

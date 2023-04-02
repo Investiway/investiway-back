@@ -1,4 +1,15 @@
-import {Controller, Get, HttpStatus, Logger, Req, Res, UnauthorizedException, UseGuards, Version} from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  HttpStatus,
+  Logger,
+  Req,
+  Res,
+  UnauthorizedException,
+  UseGuards,
+  UseInterceptors,
+  Version
+} from "@nestjs/common";
 import {ConfigService} from "@nestjs/config";
 import {AuthService} from "../services/auth.service";
 import {AuthGuard} from "@nestjs/passport";
@@ -6,12 +17,14 @@ import {Request, Response} from "express";
 import {plainToClass} from "class-transformer";
 import {FacebookAuthDto} from "../dtos/auth.dto";
 import {EAuthError} from "../constants/auth.constant";
-import {ApiBearerAuth} from "@nestjs/swagger";
+import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
+import {ResponseIntercept} from "../intercepts/response.intercept";
 
 @Controller({
   version: '1',
   path: 'auth',
 })
+@ApiTags('auth')
 export class AuthController {
   private log = new Logger(AuthController.name);
   
@@ -29,6 +42,7 @@ export class AuthController {
 
   @Get('refresh')
   @UseGuards(AuthGuard('jwt-refresh'))
+  @UseInterceptors(ResponseIntercept)
   @ApiBearerAuth()
   async refreshLogin(@Req() req: Request): Promise<any> {
     const user = (req as any).user;

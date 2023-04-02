@@ -5,10 +5,8 @@ import {
   Logger,
   Req,
   Res,
-  UnauthorizedException,
   UseGuards,
   UseInterceptors,
-  Version
 } from "@nestjs/common";
 import {ConfigService} from "@nestjs/config";
 import {AuthService} from "../services/auth.service";

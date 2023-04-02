@@ -7,6 +7,7 @@ import {FacebookStrategy} from "./strategy/facebook.strategy";
 import {GoogleStrategy} from "./strategy/google.strategy";
 import {JwtAccessStrategy} from "./strategy/jwt-access.strategy";
 import {JwtRefreshStrategy} from "./strategy/jwt-refresh.strategy";
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import {JwtRefreshStrategy} from "./strategy/jwt-refresh.strategy";
     }),
     ServicesModule,
     ControllersModule,
+    MailModule,
   ],
   controllers: [],
   providers: [

@@ -26,7 +26,11 @@ x-shared_environment: &shared_environment
   IY_JWT_REFRESH_EXPIRED: ${IY_JWT_REFRESH_EXPIRED}
   IY_JWT_ACCESS_SECRET: ${IY_JWT_ACCESS_SECRET}
   IY_JWT_ACCESS_EXPIRED: ${IY_JWT_ACCESS_EXPIRED}
-
+  
+  IY_MAIL_SERVICE: ${IY_MAIL_SERVICE}
+  IY_MAIL_USER: ${IY_MAIL_USER}
+  IY_MAIL_PASS: ${IY_MAIL_PASS}
+  
 services:
   iy-gateway:
     image: iy-dev

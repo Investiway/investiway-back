@@ -13,10 +13,12 @@ import {AuthService} from "../services/auth.service";
 import {AuthGuard} from "@nestjs/passport";
 import {Request, Response} from "express";
 import {plainToClass} from "class-transformer";
-import {FacebookAuthDto} from "../dtos/auth.dto";
+import {FacebookAuthDto, GoogleAuthDto} from "../dtos/auth.dto";
 import {EAuthError} from "../constants/auth.constant";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {ResponseIntercept} from "../intercepts/response.intercept";
+import {GoogleGuard} from "../guards/google.guard";
+import {FacebookGuard} from "../guards/facebook.guard";
 
 @Controller({
   version: '1',
@@ -55,14 +57,14 @@ export class AuthController {
   }
 
   @Get('facebook_redirect')
-  @UseGuards(AuthGuard('facebook'))
+  @UseGuards(FacebookGuard)
   async facebookLoginRedirect(
     @Req() req: Request,
     @Res() res: Response,
   ): Promise<any> {
     try {
       const user = (req as any).user?.['user'];
-      const token = await this.authService.loginWithFacebook(plainToClass(FacebookAuthDto, {
+      const token = await this.authService.loginWithSocial(plainToClass(FacebookAuthDto, {
         facebookId: user['googleId'],
         email: user['email'],
         lastName: user['lastName'],
@@ -84,9 +86,27 @@ export class AuthController {
   async googleAuth() {}
 
   @Get('google_redirect')
-  @UseGuards(AuthGuard('google'))
-  googleAuthRedirect(@Req() req: Request) {
-    console.log(req.query);
-    return true;
+  @UseGuards(GoogleGuard)
+  async googleAuthRedirect(
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    try {
+      const user = (req as any).user;
+      const token = await this.authService.loginWithSocial(plainToClass(GoogleAuthDto, {
+        googleId: user['email'],
+        email: user['email'],
+        lastName: user['lastName'],
+        firstName: user['firstName'],
+      }));
+      if (!token) {
+        res.redirect(this.authService.createFeUrlErrorRedirect(EAuthError.Unauthorization));
+        return ;
+      }
+      res.redirect(this.authService.createFeUrlRedirect(token));
+    } catch (e) {
+      this.log.error(e);
+      res.redirect(this.authService.createFeUrlErrorRedirect(EAuthError.InternalServer));
+    }
   }
 }

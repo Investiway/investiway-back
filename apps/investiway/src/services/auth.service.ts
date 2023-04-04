@@ -39,7 +39,7 @@ export class AuthService {
     @InjectModel(User.name) private userModel: Model<UserDocument>,
   ) {}
   
-  async loginWithFacebook(data: FacebookAuthDto | GoogleAuthDto): Promise<TokenGroup> {
+  async loginWithSocial(data: FacebookAuthDto | GoogleAuthDto): Promise<TokenGroup> {
     const filter: FilterQuery<Partial<UserDocument>> = {};
     if ((<GoogleAuthDto>data).googleId) {
       filter.googleId = (<GoogleAuthDto>data).googleId

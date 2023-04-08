@@ -1,4 +1,4 @@
-import {Test} from "@nestjs/testing";
+import {Test, TestingModule} from "@nestjs/testing";
 import {AuthService} from "./auth.service";
 import {MongoMemoryServer} from "mongodb-memory-server";
 import {MongooseModule} from "@nestjs/mongoose";
@@ -9,17 +9,19 @@ import {features} from "../schema/schema.module";
 import * as jwt from 'jsonwebtoken';
 import {EAuthError} from "../constants/auth.constant";
 import {FacebookAuthDto, GoogleAuthDto} from "../dtos/auth.dto";
+import * as mongoose from "mongoose";
 
 describe("AuthService", () => {
   let authService: AuthService;
   let userService: UserService;
   let configService: ConfigService;
   let mongoServer: MongoMemoryServer;
+  let module: TestingModule;
   
   beforeAll(async () => {
     mongoServer = await MongoMemoryServer.create();
     const mongoUri = mongoServer.getUri();
-    const module = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       imports: [
         ConfigModule.forRoot({ 
           isGlobal: true,
@@ -39,6 +41,11 @@ describe("AuthService", () => {
     authService = module.get(AuthService);
     configService = module.get(ConfigService);
     userService = module.get(UserService);
+  })
+
+  afterAll(async () => {
+    await mongoose.disconnect();
+    await mongoServer.stop();
   })
   
   it('Sign access', async () => {

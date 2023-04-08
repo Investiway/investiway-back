@@ -36,8 +36,11 @@ jobs:
       - uses: borales/actions-yarn@v3.0.0
         with:
           cmd: install
-      - name: Install dep
-        run: yarn
+      - name: Install & build
+        run: |
+          cd apps/investiway
+          yarn
+          yarn build
       - name: Test
         run: |
           cd apps/investiway

@@ -36,11 +36,15 @@ jobs:
       - uses: borales/actions-yarn@v3.0.0
         with:
           cmd: install
-      - name: spec test
+      - name: Install dep
         uses: borales/actions-yarn@v3.0.0
-        working-directory: ./apps/investiway
         with:
-          cmd: test
+          cmd: yarn
+          
+      - name: Install dep
+        run: |
+          cd apps/investiway
+          yarn test
   
   #  e2e-test:
 #    runs-on: ubuntu-latest

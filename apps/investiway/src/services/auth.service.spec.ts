@@ -9,7 +9,6 @@ import {features} from "../schema/schema.module";
 import * as jwt from 'jsonwebtoken';
 import {EAuthError} from "../constants/auth.constant";
 import {FacebookAuthDto, GoogleAuthDto} from "../dtos/auth.dto";
-import * as mongoose from "mongoose";
 
 describe("AuthService", () => {
   let authService: AuthService;
@@ -44,7 +43,7 @@ describe("AuthService", () => {
   })
 
   afterAll(async () => {
-    await mongoose.disconnect();
+    await module.close();
     await mongoServer.stop();
   })
   

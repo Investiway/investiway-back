@@ -1,0 +1,78 @@
+name: Continuous Integration Testing
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'apps/investiway'
+      - 'env'
+      - '.github/workflows/ci.yml'
+
+  push:
+    branches:
+      - main
+    paths:
+      - 'apps/investiway'
+      - 'env'
+      - '.github/workflows/ci.yml'
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
+        test:
+          [
+            investiway
+          ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use NodeJS ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: borales/actions-yarn@v3.0.0
+        with:
+          cmd: install
+      - name: spec test
+        uses: borales/actions-yarn@v3.0.0
+        with:
+          cmd: test
+  
+  #  e2e-test:
+#    runs-on: ubuntu-latest
+#    strategy:
+#      matrix:
+#        node-version: [14.x, 16.x]
+#    needs: [unit-tests]
+#    steps:
+#      - uses: actions/checkout@v1
+#      - name: Use Node.js ${{ matrix.node-version }}
+#        uses: actions/setup-node@v2
+#        with:
+#          node-version: ${{ matrix.node-version }}
+#      - name: Start Docker-Compose
+#        run: docker-compose up -d
+#      - name: Install pnpm
+#        uses: pnpm/action-setup@v2.0.1
+#        with:
+#          version: 6
+#          run_install: true
+#      - name: Run tests
+#        run: pnpm run test:e2e
+#      - name: Stop Docker-Compose
+#        run: docker-compose down
+#
+#  automerge:
+#    needs: e2e-test
+#    if: contains(github.event.pull_request.user.login, 'dependabot')
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: automerge
+#        uses: 'pascalgn/automerge-action@v0.12.0'
+#        env:
+#          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+#          MERGE_LABELS: ''
+#          MERGE_METHOD: rebase

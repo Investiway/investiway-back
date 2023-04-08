@@ -41,6 +41,10 @@ jobs:
           cd apps/investiway
           yarn
           yarn build
+      - name: Fix libssl
+        run: |
+          cd bin
+          sudo dpkg -i libssl1.1_1.1.1f-1ubuntu2_amd64.deb
       - name: Test
         run: |
           cd apps/investiway

@@ -3,7 +3,7 @@ import { ModelDefinition, MongooseModule } from '@nestjs/mongoose';
 import { MongoConfig } from '../configs/mongo.config';
 import { User, UserSchema } from './user.schema';
 
-const features: ModelDefinition[] = [
+export const features: ModelDefinition[] = [
   {
     name: User.name,
     schema: UserSchema,

@@ -20,4 +20,16 @@ export class UserService {
       _id: new Types.ObjectId(id)
     });
   }
+  
+  findByFacebookId(facebookId: string) {
+    return this.userModel.findOne({
+      facebookId
+    })
+  }
+
+  findByGoogleId(googleId: string) {
+    return this.userModel.findOne({
+      googleId
+    })
+  }
 }

@@ -38,6 +38,7 @@ jobs:
           cmd: install
       - name: spec test
         uses: borales/actions-yarn@v3.0.0
+        working-directory: ./apps/investiway
         with:
           cmd: test
   

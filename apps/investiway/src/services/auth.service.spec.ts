@@ -25,7 +25,7 @@ describe("AuthService", () => {
       imports: [
         ConfigModule.forRoot({ 
           isGlobal: true,
-          envFilePath: '../../env/.env.test'
+          envFilePath: '.env.test'
         }),
         MongooseModule.forRoot(mongoUri),
         MongooseModule.forFeature(features),

@@ -42,7 +42,7 @@ jobs:
           cd apps/investiway
           yarn test
   
-  #  e2e-test:
+#  e2e-test:
 #    runs-on: ubuntu-latest
 #    strategy:
 #      matrix:

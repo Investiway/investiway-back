@@ -19,6 +19,7 @@ on:
       - '.github/workflows/ci.yml'
       - 'bin'
 
+
 jobs:
   unit-tests:
     runs-on: ubuntu-latest

@@ -9,7 +9,17 @@
     "dev:halt": "docker-compose --env-file ./env/.env.dev -f docker/docker-compose.dev.yaml down",
     "dev:destroy": "docker-compose --env-file ./env/.env.dev -f docker/docker-compose.dev.yaml rm -f",
     "dev:log": "docker-compose --env-file ./env/.env.dev -f docker/docker-compose.dev.yaml logs -f",
-    "dev:rmq": "docker-compose --env-file ./env/.env.dev -f docker/docker-compose.dev.yaml restart fl-rabbitmq"
+    "dev:rmq": "docker-compose --env-file ./env/.env.dev -f docker/docker-compose.dev.yaml restart fl-rabbitmq",
+    "release": "standard-version && git push --follow-tags"
+  },
+  "hooks": {
+    "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+    "pre-commit": "lint-staged",
+    "post-commit": "git update-index --again",
+    "post-merge": "yarn install && yarn build",
+    "post-rewrite": "yarn install && yarn build",
+    "pre-push": "yarn test && yarn lint",
+    "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true"
   },
   "repository": {
     "type": "git",

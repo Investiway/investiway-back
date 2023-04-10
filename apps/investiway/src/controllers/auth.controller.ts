@@ -13,12 +13,13 @@ import {AuthService} from "../services/auth.service";
 import {AuthGuard} from "@nestjs/passport";
 import {Request, Response} from "express";
 import {plainToClass} from "class-transformer";
-import {FacebookAuthDto, GoogleAuthDto} from "../dtos/auth.dto";
+import {AccessResponse, FacebookAuthDto, GoogleAuthDto} from "../dtos/auth.dto";
 import {EAuthError} from "../constants/auth.constant";
 import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
 import {ResponseIntercept} from "../intercepts/response.intercept";
 import {GoogleGuard} from "../guards/google.guard";
 import {FacebookGuard} from "../guards/facebook.guard";
+import {ApiSuccessResponse} from "../decorators/response.decorator";
 
 @Controller({
   version: '1',
@@ -35,7 +36,9 @@ export class AuthController {
 
   @Get('access')
   @UseGuards(AuthGuard('jwt-access'))
+  @UseInterceptors(ResponseIntercept)
   @ApiBearerAuth()
+  @ApiSuccessResponse(AccessResponse)
   async accessLogin(@Req() req: Request): Promise<any> {
     return (req as any).user;
   }

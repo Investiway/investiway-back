@@ -1,3 +1,5 @@
+import {ApiProperty} from "@nestjs/swagger";
+
 export class CommonAuthDto {
   email: string;
   lastName: string;
@@ -19,4 +21,9 @@ export class TokenGroup {
 
 export class JwtPayload {
   id: string
+}
+
+export class AccessResponse {
+  @ApiProperty()
+  test: number;
 }

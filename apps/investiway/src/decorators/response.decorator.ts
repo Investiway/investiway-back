@@ -1,6 +1,6 @@
 import { applyDecorators, Type } from "@nestjs/common";
-import { ApiExtraModels, ApiOkResponse, getSchemaPath } from "@nestjs/swagger";
-import {ResponseSuccessDto} from "../dtos/response.dto";
+import {ApiExtraModels, ApiOkResponse, ApiResponseOptions, getSchemaPath} from "@nestjs/swagger";
+import {ResponseErrorDto, ResponseSuccessDto} from "../dtos/response.dto";
 
 export const ApiSuccessResponse = <TModel extends Type<any>>(
   model: TModel
@@ -19,6 +19,21 @@ export const ApiSuccessResponse = <TModel extends Type<any>>(
               },
             },
           },
+        ],
+      },
+    })
+  );
+};
+
+export const ApiErrorResponse = <TModel extends Type<any>>(
+  decorator: (options?: ApiResponseOptions) => (MethodDecorator & ClassDecorator)
+) => {
+  return applyDecorators(
+    ApiExtraModels(ResponseErrorDto),
+    decorator({
+      schema: {
+        allOf: [
+          { $ref: getSchemaPath(ResponseErrorDto) },
         ],
       },
     })

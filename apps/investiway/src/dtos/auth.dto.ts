@@ -1,4 +1,5 @@
 import {ApiProperty} from "@nestjs/swagger";
+import {User} from "../schema/user.schema";
 
 export class CommonAuthDto {
   email: string;
@@ -24,6 +25,11 @@ export class JwtPayload {
 }
 
 export class AccessResponse {
+  @ApiProperty({ type: User })
+  user: User;
+}
+
+export class RefreshResponse {
   @ApiProperty()
-  test: number;
+  accessToken: string;
 }

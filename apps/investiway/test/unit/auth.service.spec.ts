@@ -1,14 +1,14 @@
 import {Test, TestingModule} from "@nestjs/testing";
-import {AuthService} from "./auth.service";
+import {AuthService} from "../../src/services/auth.service";
 import {MongoMemoryServer} from "mongodb-memory-server";
 import {MongooseModule} from "@nestjs/mongoose";
-import {UserService} from "./user.service";
+import {UserService} from "../../src/services/user.service";
 import {ConfigModule, ConfigService} from "@nestjs/config";
 import {JwtService} from "@nestjs/jwt";
-import {features} from "../schema/schema.module";
+import {features} from "../../src/schema/schema.module";
 import * as jwt from 'jsonwebtoken';
-import {EAuthError} from "../constants/auth.constant";
-import {FacebookAuthDto, GoogleAuthDto} from "../dtos/auth.dto";
+import {EAuthError} from "../../src/constants/auth.constant";
+import {FacebookAuthDto, GoogleAuthDto} from "../../src/dtos/auth.dto";
 
 describe("AuthService", () => {
   let authService: AuthService;

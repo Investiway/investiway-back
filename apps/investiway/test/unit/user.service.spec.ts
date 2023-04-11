@@ -1,11 +1,11 @@
 import {Test, TestingModule} from "@nestjs/testing";
 import {MongoMemoryServer} from "mongodb-memory-server";
 import {getModelToken, MongooseModule} from "@nestjs/mongoose";
-import {UserService} from "./user.service";
+import {UserService} from "../../src/services/user.service";
 import {ConfigModule, ConfigService} from "@nestjs/config";
-import {features} from "../schema/schema.module";
-import {FacebookAuthDto, GoogleAuthDto} from "../dtos/auth.dto";
-import {User, UserDocument} from "../schema/user.schema";
+import {features} from "../../src/schema/schema.module";
+import {FacebookAuthDto, GoogleAuthDto} from "../../src/dtos/auth.dto";
+import {User, UserDocument} from "../../src/schema/user.schema";
 import {Model} from "mongoose";
 
 describe("UserService", () => {

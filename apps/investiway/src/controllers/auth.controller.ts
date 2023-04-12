@@ -21,6 +21,7 @@ import {GoogleGuard} from "../guards/google.guard";
 import {FacebookGuard} from "../guards/facebook.guard";
 import {ApiErrorResponse, ApiSuccessResponse} from "../decorators/response.decorator";
 
+
 @Controller({
   version: '1',
   path: 'auth',

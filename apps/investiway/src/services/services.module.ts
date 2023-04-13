@@ -4,6 +4,7 @@ import {JwtModule} from "@nestjs/jwt";
 import {JwtConfig} from "../configs/jwt.config";
 import {SchemaModule} from "../schema/schema.module";
 import {UserService} from "./user.service";
+import {GoalTypeService} from "./goal-type.service";
 
 @Module({
   imports: [
@@ -12,7 +13,7 @@ import {UserService} from "./user.service";
     }),
     SchemaModule
   ],
-  providers: [AuthService, UserService],
-  exports: [AuthService, UserService],
+  providers: [AuthService, UserService, GoalTypeService],
+  exports: [AuthService, UserService, GoalTypeService],
 })
 export class ServicesModule {}

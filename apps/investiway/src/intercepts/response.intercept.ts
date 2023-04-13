@@ -3,7 +3,7 @@ import {
   CallHandler,
   ExecutionContext,
   HttpException,
-  Injectable, InternalServerErrorException,
+  Injectable, InternalServerErrorException, Logger,
   NestInterceptor
 } from "@nestjs/common";
 import {catchError, map, Observable, throwError} from "rxjs";
@@ -11,9 +11,12 @@ import {ResponseDto} from "../dtos/response.dto";
 
 @Injectable()
 export class ResponseIntercept implements NestInterceptor {
+  private readonly logger  = new Logger();
+  
   intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> | Promise<Observable<any>> {
     return next.handle()
       .pipe(catchError((e) => {
+        this.logger.error(e.stack || e);
         try {
           const r = e.getResponse();
           const s = e.getStatus();

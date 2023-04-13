@@ -1,15 +1,11 @@
-import {Injectable} from "@nestjs/common";
-import {MailerOptions, MailerOptionsFactory} from "@nestjs-modules/mailer";
-import {ConfigService} from "@nestjs/config";
-
+import { Injectable } from '@nestjs/common';
+import { MailerOptions, MailerOptionsFactory } from '@nestjs-modules/mailer';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MailConfig implements MailerOptionsFactory {
-  constructor(
-    private readonly configService: ConfigService,
-  ) {
-  }
-  
+  constructor(private readonly configService: ConfigService) {}
+
   createMailerOptions(): Promise<MailerOptions> | MailerOptions {
     return {
       transport: {
@@ -17,8 +13,8 @@ export class MailConfig implements MailerOptionsFactory {
         auth: {
           user: this.configService.get('IY_MAIL_USER'),
           pass: this.configService.get('IY_MAIL_PASS'),
-        }
-      }
+        },
+      },
     };
   }
 }

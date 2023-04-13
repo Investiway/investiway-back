@@ -7,12 +7,10 @@ import {
   mongoQueryMatcher,
 } from '@casl/ability';
 import { CaslAction } from './casl.enum';
-import {User} from "../schema/user.schema";
-import {GoalType} from "../schema/goal-type.schema";
+import { User } from '../schema/user.schema';
+import { GoalType } from '../schema/goal-type.schema';
 
-type Subjects =
-  | InferSubjects<typeof User | typeof GoalType>
-  | 'all';
+type Subjects = InferSubjects<typeof User | typeof GoalType> | 'all';
 
 export type AppAbility = Ability<[CaslAction, Subjects]>;
 

@@ -1,5 +1,4 @@
-import {Controller, Get, Version} from "@nestjs/common";
+import { Controller, Get, Version } from '@nestjs/common';
 
 @Controller('app')
-export class AppController {
-}
+export class AppController {}

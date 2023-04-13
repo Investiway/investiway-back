@@ -1,15 +1,15 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import {DocumentBuilder, SwaggerModule} from "@nestjs/swagger";
-import {ValidationPipe, VersioningType} from "@nestjs/common";
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { RedisIoAdapter } from './adapters/redis-io.adapter';
-import {cors} from "./configs/cors.config";
+import { cors } from './configs/cors.config';
 import { ExpressAdapter } from '@bull-board/express';
 import { createBullBoard } from '@bull-board/api';
 import { BullAdapter } from '@bull-board/api/bullAdapter';
 import { Queue } from 'bull';
 import * as expressBasicAuth from 'express-basic-auth';
-import {ConfigService} from "@nestjs/config";
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -47,7 +47,7 @@ async function bootstrap() {
   app.enableCors({
     origin: cors,
   });
-  
+
   const serverAdapter = new ExpressAdapter();
   serverAdapter.setBasePath('/bull');
   createBullBoard({
@@ -66,7 +66,7 @@ async function bootstrap() {
     }),
     serverAdapter.getRouter(),
   );
-  
+
   await app.listen(3000);
 }
-bootstrap().then(r => {});
+bootstrap().then((r) => {});

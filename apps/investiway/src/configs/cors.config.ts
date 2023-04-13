@@ -1,3 +1,1 @@
-export const cors = [
-  'http://localhost:3434',
-];
+export const cors = ['http://localhost:3434'];

@@ -7,20 +7,33 @@ import {
   Res,
   UseGuards,
   UseInterceptors,
-} from "@nestjs/common";
-import {ConfigService} from "@nestjs/config";
-import {AuthService} from "../services/auth.service";
-import {AuthGuard} from "@nestjs/passport";
-import {Request, Response} from "express";
-import {plainToClass} from "class-transformer";
-import {AccessResponse, FacebookAuthDto, GoogleAuthDto, RefreshResponse} from "../dtos/auth.dto";
-import {EAuthError} from "../constants/auth.constant";
-import {ApiBearerAuth, ApiHeader, ApiOperation, ApiTags, ApiUnauthorizedResponse} from "@nestjs/swagger";
-import {ResponseIntercept} from "../intercepts/response.intercept";
-import {GoogleGuard} from "../guards/google.guard";
-import {FacebookGuard} from "../guards/facebook.guard";
-import {ApiErrorResponse, ApiSuccessResponse} from "../decorators/response.decorator";
-
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { AuthService } from '../services/auth.service';
+import { AuthGuard } from '@nestjs/passport';
+import { Request, Response } from 'express';
+import { plainToClass } from 'class-transformer';
+import {
+  AccessResponse,
+  FacebookAuthDto,
+  GoogleAuthDto,
+  RefreshResponse,
+} from '../dtos/auth.dto';
+import { EAuthError } from '../constants/auth.constant';
+import {
+  ApiBearerAuth,
+  ApiHeader,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { ResponseIntercept } from '../intercepts/response.intercept';
+import { GoogleGuard } from '../guards/google.guard';
+import { FacebookGuard } from '../guards/facebook.guard';
+import {
+  ApiErrorResponse,
+  ApiSuccessResponse,
+} from '../decorators/response.decorator';
 
 @Controller({
   version: '1',
@@ -29,10 +42,10 @@ import {ApiErrorResponse, ApiSuccessResponse} from "../decorators/response.decor
 @ApiTags('auth')
 export class AuthController {
   private log = new Logger(AuthController.name);
-  
+
   constructor(
     private readonly configService: ConfigService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
   ) {}
 
   @Get('access')
@@ -51,7 +64,11 @@ export class AuthController {
   @ApiBearerAuth()
   @ApiSuccessResponse(RefreshResponse)
   @ApiErrorResponse(ApiUnauthorizedResponse)
-  @ApiHeader({ name: 'Authorization', description: 'Refresh token (Need Bearer)', required: true })
+  @ApiHeader({
+    name: 'Authorization',
+    description: 'Refresh token (Need Bearer)',
+    required: true,
+  })
   async refreshLogin(@Req() req: Request): Promise<any> {
     const user = (req as any).user;
     const accessToken = await this.authService.signAccess(user._id);
@@ -74,20 +91,26 @@ export class AuthController {
   ): Promise<any> {
     try {
       const user = (req as any).user?.['user'];
-      const token = await this.authService.loginWithSocial(plainToClass(FacebookAuthDto, {
-        facebookId: user['facebookId'],
-        email: user['email'],
-        lastName: user['lastName'],
-        firstName: user['firstName'],
-      }));
+      const token = await this.authService.loginWithSocial(
+        plainToClass(FacebookAuthDto, {
+          facebookId: user['facebookId'],
+          email: user['email'],
+          lastName: user['lastName'],
+          firstName: user['firstName'],
+        }),
+      );
       if (!token) {
-        res.redirect(this.authService.createFeUrlErrorRedirect(EAuthError.Unauthorization));
-        return ;
+        res.redirect(
+          this.authService.createFeUrlErrorRedirect(EAuthError.Unauthorization),
+        );
+        return;
       }
       res.redirect(this.authService.createFeUrlRedirect(token));
     } catch (e) {
       this.log.error(e);
-      res.redirect(this.authService.createFeUrlErrorRedirect(EAuthError.InternalServer));
+      res.redirect(
+        this.authService.createFeUrlErrorRedirect(EAuthError.InternalServer),
+      );
     }
   }
 
@@ -99,26 +122,29 @@ export class AuthController {
   @Get('google_redirect')
   @ApiOperation({ summary: 'Callback google (own BE)' })
   @UseGuards(GoogleGuard)
-  async googleAuthRedirect(
-    @Req() req: Request,
-    @Res() res: Response,
-  ) {
+  async googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
     try {
       const user = (req as any).user;
-      const token = await this.authService.loginWithSocial(plainToClass(GoogleAuthDto, {
-        googleId: user['email'],
-        email: user['email'],
-        lastName: user['lastName'],
-        firstName: user['firstName'],
-      }));
+      const token = await this.authService.loginWithSocial(
+        plainToClass(GoogleAuthDto, {
+          googleId: user['email'],
+          email: user['email'],
+          lastName: user['lastName'],
+          firstName: user['firstName'],
+        }),
+      );
       if (!token) {
-        res.redirect(this.authService.createFeUrlErrorRedirect(EAuthError.Unauthorization));
-        return ;
+        res.redirect(
+          this.authService.createFeUrlErrorRedirect(EAuthError.Unauthorization),
+        );
+        return;
       }
       res.redirect(this.authService.createFeUrlRedirect(token));
     } catch (e) {
       this.log.error(e);
-      res.redirect(this.authService.createFeUrlErrorRedirect(EAuthError.InternalServer));
+      res.redirect(
+        this.authService.createFeUrlErrorRedirect(EAuthError.InternalServer),
+      );
     }
   }
 }

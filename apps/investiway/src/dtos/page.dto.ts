@@ -1,12 +1,20 @@
-import {IsAlphanumeric, IsArray, IsEnum, IsInt, IsOptional, IsString, Max, Min} from "class-validator";
-import {ApiProperty, ApiPropertyOptional} from "@nestjs/swagger";
-import {Type} from "class-transformer";
+import {
+  IsAlphanumeric,
+  IsArray,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+} from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 
 export enum Order {
   Asc = 1,
   Desc = -1,
 }
-
 
 export class PageOptionsDto {
   @ApiPropertyOptional()
@@ -16,7 +24,7 @@ export class PageOptionsDto {
 
   @ApiPropertyOptional({
     enum: Order,
-    description: '1: Asc, -1: Desc'
+    description: '1: Asc, -1: Desc',
   })
   @IsEnum(Order)
   @IsOptional()
@@ -24,7 +32,7 @@ export class PageOptionsDto {
 
   @ApiPropertyOptional({
     minimum: 1,
-    default: 1
+    default: 1,
   })
   @Type(() => Number)
   @IsInt()
@@ -56,7 +64,7 @@ export class PageOptionsDto {
 export class PageMetaDtoParameters {
   pageOptionDto: PageOptionsDto;
   itemCount: number;
-  
+
   constructor(pageOptionDto: PageOptionsDto, itemCount: number) {
     this.pageOptionDto = pageOptionDto;
     this.itemCount = itemCount;
@@ -95,7 +103,7 @@ export class PageMetaDto {
 export class PageDto<T> {
   @IsArray()
   @ApiProperty({ isArray: true })
-  readonly data: T[]
+  readonly data: T[];
 
   @ApiProperty({ type: () => PageMetaDto })
   readonly meta: PageMetaDto;

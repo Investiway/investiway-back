@@ -1,11 +1,11 @@
-import {ApiProperty} from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class SchemaDto {
   @ApiProperty()
   _id: string;
-  
+
   @ApiProperty()
-  updatedAt: string
+  updatedAt: string;
 }
 
 export class SchemaUpdateDto {
@@ -19,5 +19,5 @@ export class SchemaUpdateDto {
   upsertedCount: number;
 
   @ApiProperty()
-  matchedCount: number
+  matchedCount: number;
 }

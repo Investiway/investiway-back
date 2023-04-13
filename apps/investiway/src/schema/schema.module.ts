@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ModelDefinition, MongooseModule } from '@nestjs/mongoose';
 import { MongoConfig } from '../configs/mongo.config';
 import { User, UserSchema } from './user.schema';
-import {GoalType, GoalTypeSchema} from "./goal-type.schema";
+import { GoalType, GoalTypeSchema } from './goal-type.schema';
 
 export const features: ModelDefinition[] = [
   {

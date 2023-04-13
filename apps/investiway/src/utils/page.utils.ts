@@ -1,19 +1,23 @@
-import {Model, PipelineStage} from "mongoose";
-import {PageOptionsDto} from "../dtos/page.dto";
+import { Model, PipelineStage } from 'mongoose';
+import { PageOptionsDto } from '../dtos/page.dto';
 
 export class PageUtils {
-  
-  static async countItems<T>(model: Model<T>, pipeline: PipelineStage[]): Promise<number> {
-    const totalRow = await model.aggregate([
-      ...pipeline,
-      {
-        $group: { _id: "", count: { $sum: 1 } }
-      }
-    ]).exec();
+  static async countItems<T>(
+    model: Model<T>,
+    pipeline: PipelineStage[],
+  ): Promise<number> {
+    const totalRow = await model
+      .aggregate([
+        ...pipeline,
+        {
+          $group: { _id: '', count: { $sum: 1 } },
+        },
+      ])
+      .exec();
     const total = totalRow?.[0]?.['count'] || 0;
-    return total
+    return total;
   }
-  
+
   static pushLimitAndOrder(pipeline: PipelineStage[], page: PageOptionsDto) {
     if (page.skip) {
       pipeline.push({ $skip: page.skip });
@@ -24,8 +28,8 @@ export class PageUtils {
     if (page.order && page.orderField) {
       pipeline.push({
         $sort: {
-          [page.orderField]: page.order
-        }
+          [page.orderField]: page.order,
+        },
       });
     }
   }

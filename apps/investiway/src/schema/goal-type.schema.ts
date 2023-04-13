@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import {HydratedDocument, ObjectId, Types} from 'mongoose';
-import {SchemaDto} from "../dtos/schema.dto";
-import {ApiProperty} from "@nestjs/swagger";
+import { HydratedDocument, ObjectId, Types } from 'mongoose';
+import { SchemaDto } from '../dtos/schema.dto';
+import { ApiProperty } from '@nestjs/swagger';
 
 export type GoalTypeDocument = HydratedDocument<GoalType>;
 

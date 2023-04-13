@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import {MailerModule} from "@nestjs-modules/mailer";
+import { MailerModule } from '@nestjs-modules/mailer';
 import { MailService } from './mail.service';
-import {MailConfig} from "../configs/mail.config";
+import { MailConfig } from '../configs/mail.config';
 
 @Module({
   imports: [
     MailerModule.forRootAsync({
-      useClass: MailConfig
-    })
+      useClass: MailConfig,
+    }),
   ],
-  providers: [MailService]
+  providers: [MailService],
 })
 export class MailModule {}

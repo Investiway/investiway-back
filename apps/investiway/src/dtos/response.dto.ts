@@ -1,9 +1,9 @@
-import {ApiProperty} from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class ResponseSuccessDto<T> {
   @ApiProperty({ default: true })
   success: true;
-  
+
   @ApiProperty()
   result: T;
 }
@@ -19,7 +19,7 @@ export class ResponseErrorDataDto {
 export class ResponseErrorDto {
   @ApiProperty({ default: false })
   success: false;
-  
+
   @ApiProperty()
   error: ResponseErrorDataDto;
 }

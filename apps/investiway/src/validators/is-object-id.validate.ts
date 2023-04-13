@@ -3,8 +3,8 @@ import {
   ValidationArguments,
   ValidationOptions,
   ValidatorConstraint,
-  ValidatorConstraintInterface
-} from "class-validator";
+  ValidatorConstraintInterface,
+} from 'class-validator';
 
 @ValidatorConstraint({ name: 'isObjectId', async: false })
 export class IsObjectIdValidate implements ValidatorConstraintInterface {
@@ -19,7 +19,7 @@ export class IsObjectIdValidate implements ValidatorConstraintInterface {
 
 export function IsObjectId<T, K>(
   field?: K,
-  validationOptions?: ValidationOptions
+  validationOptions?: ValidationOptions,
 ) {
   return function (object: any, propertyName: string) {
     registerDecorator({
@@ -28,9 +28,7 @@ export function IsObjectId<T, K>(
       propertyName: propertyName,
       options: validationOptions,
       validator: IsObjectIdValidate,
-      constraints: [
-        field,
-      ]
+      constraints: [field],
     });
   };
 }

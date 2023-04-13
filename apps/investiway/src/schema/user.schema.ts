@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
-import {ApiProperty} from "@nestjs/swagger";
-import {SchemaDto} from "../dtos/schema.dto";
+import { ApiProperty } from '@nestjs/swagger';
+import { SchemaDto } from '../dtos/schema.dto';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -16,7 +16,7 @@ export class User extends SchemaDto {
   @ApiProperty()
   @Prop()
   googleId: string;
-  
+
   @ApiProperty()
   @Prop()
   facebookId: string;
@@ -32,7 +32,7 @@ export class User extends SchemaDto {
   @ApiProperty()
   @Prop()
   firstName: string;
-  
+
   @ApiProperty()
   @Prop()
   shouldResetPassword: boolean;

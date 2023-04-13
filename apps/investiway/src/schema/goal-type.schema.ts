@@ -19,7 +19,7 @@ export class GoalType extends SchemaDto {
 
   @ApiProperty({ type: String })
   @Prop({ type: Types.ObjectId })
-  userId: ObjectId
+  userId: ObjectId;
 
   @ApiProperty({ type: Date })
   @Prop()

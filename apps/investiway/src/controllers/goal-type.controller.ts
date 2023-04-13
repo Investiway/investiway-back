@@ -14,8 +14,11 @@ import {PageOptionsDto} from "../dtos/page.dto";
 import {GoalTypeService} from "../services/goal-type.service";
 import {ApiSuccessResponse} from "../decorators/response.decorator";
 import {SchemaUpdateDto} from "../dtos/schema.dto";
+import {CaslGuard, CheckCasl} from "../guards/casl.guard";
+import {CaslAction} from "../casl/casl.enum";
+import { plainToClass } from "class-transformer";
 
-@UseGuards(AuthGuard('jwt-access'))
+@UseGuards(AuthGuard('jwt-access'), CaslGuard)
 @ApiBearerAuth()
 @ApiTags('goal-type')
 @UseInterceptors(ResponseIntercept)
@@ -30,6 +33,12 @@ export class GoalTypeController {
   }
   
   @Get('search')
+  @CheckCasl((ability, request) =>
+    ability.can(
+      CaslAction.Read,
+      plainToClass(GoalType, { userId: request.query.userId }),
+    ),
+  )
   @ApiPaginatedResponse(GoalType)
   search(
     @Query() search: GoalTypeSearchQuery,
@@ -45,6 +54,12 @@ export class GoalTypeController {
   }
   
   @Post()
+  @CheckCasl((ability, request) =>
+    ability.can(
+      CaslAction.Read,
+      plainToClass(GoalType, { userId: request.body.userId }),
+    ),
+  )
   @ApiSuccessResponse(GoalType)
   insert(
     @Body() data: GoalTypeCreateOrEditBody
@@ -53,6 +68,12 @@ export class GoalTypeController {
   }
   
   @Put(':id')
+  @CheckCasl((ability, request) =>
+    ability.can(
+      CaslAction.Read,
+      plainToClass(GoalType, { userId: request.body.userId }),
+    ),
+  )
   @ApiSuccessResponse(SchemaUpdateDto)
   edit(
     @Param() params: GoalTypeCreateOrEditParams,

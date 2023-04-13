@@ -1,33 +1,69 @@
-import {Controller, Delete, Get, Post, Put, UseGuards, UseInterceptors} from "@nestjs/common";
-import {ApiBearerAuth, ApiTags} from "@nestjs/swagger";
+import {Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards, UseInterceptors} from "@nestjs/common";
+import {ApiBearerAuth, ApiParam, ApiProperty, ApiTags} from "@nestjs/swagger";
 import {AuthGuard} from "@nestjs/passport";
 import {ResponseIntercept} from "../intercepts/response.intercept";
+import {ApiPaginatedResponse} from "../decorators/api-paginated-reponse.decorator";
+import {GoalType} from "../schema/goal-type.schema";
+import {
+  GoalTypeCreateOrEditBody, GoalTypeCreateOrEditParams,
+  GoalTypeDeleteParams,
+  GoalTypeGetOneParams,
+  GoalTypeSearchQuery
+} from "../dtos/goal-type.dto";
+import {PageOptionsDto} from "../dtos/page.dto";
+import {GoalTypeService} from "../services/goal-type.service";
+import {ApiSuccessResponse} from "../decorators/response.decorator";
+import {SchemaUpdateDto} from "../dtos/schema.dto";
 
 @UseGuards(AuthGuard('jwt-access'))
 @ApiBearerAuth()
 @ApiTags('goal-type')
-@Controller('goal-type')
+@UseInterceptors(ResponseIntercept)
+@Controller({
+  version: '1',
+  path: 'goal-type',
+})
 export class GoalTypeController {
+  constructor(
+    private readonly goalTypeService: GoalTypeService
+  ) {
+  }
   
   @Get('search')
-  search() {
+  @ApiPaginatedResponse(GoalType)
+  search(
+    @Query() search: GoalTypeSearchQuery,
+    @Query() page: PageOptionsDto
+  ) {
+    return this.goalTypeService.search(search, page);
   }
   
   @Get(':id')
   @UseInterceptors(ResponseIntercept)
-  getOne() {
-    return 1;
+  getOne(@Param() params: GoalTypeGetOneParams) {
+    return this.goalTypeService.getById(params.id);
   }
   
   @Post()
-  insert() {
+  @ApiSuccessResponse(GoalType)
+  insert(
+    @Body() data: GoalTypeCreateOrEditBody
+  ) {
+    return this.goalTypeService.insert(data);
   }
   
   @Put(':id')
-  edit() {
+  @ApiSuccessResponse(SchemaUpdateDto)
+  edit(
+    @Param() params: GoalTypeCreateOrEditParams,
+    @Body() data: GoalTypeCreateOrEditBody
+  ) {
+    return this.goalTypeService.update(params.id, data);
   }
   
   @Delete(':id')
-  delete() {
+  @ApiSuccessResponse(SchemaUpdateDto)
+  delete(@Param() params: GoalTypeDeleteParams) {
+    return this.goalTypeService.softDelete(params.id)
   }
 }

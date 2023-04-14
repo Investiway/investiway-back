@@ -10,7 +10,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiParam, ApiProperty, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { ResponseIntercept } from '../intercepts/response.intercept';
 import { ApiPaginatedResponse } from '../decorators/api-paginated-reponse.decorator';
@@ -29,6 +29,7 @@ import { SchemaUpdateDto } from '../dtos/schema.dto';
 import { CaslGuard, CheckCasl } from '../guards/casl.guard';
 import { CaslAction } from '../casl/casl.enum';
 import { plainToClass } from 'class-transformer';
+import { MatchFieldRequestCasl } from 'src/casl/common/match-field-request.casl';
 
 @UseGuards(AuthGuard('jwt-access'), CaslGuard)
 @ApiBearerAuth()
@@ -42,10 +43,13 @@ export class GoalTypeController {
   constructor(private readonly goalTypeService: GoalTypeService) {}
 
   @Get('search')
-  @CheckCasl((ability, request) =>
-    ability.can(
+  @CheckCasl(
+    new MatchFieldRequestCasl<GoalTypeSearchQuery, GoalType>(
       CaslAction.Read,
-      plainToClass(GoalType, { userId: request.query.userId }),
+      GoalType,
+      'query',
+      'userId',
+      'userId',
     ),
   )
   @ApiPaginatedResponse(GoalType)
@@ -60,10 +64,13 @@ export class GoalTypeController {
   }
 
   @Post()
-  @CheckCasl((ability, request) =>
-    ability.can(
+  @CheckCasl(
+    new MatchFieldRequestCasl<GoalTypeCreateOrEditBody, GoalType>(
       CaslAction.Read,
-      plainToClass(GoalType, { userId: request.body.userId }),
+      GoalType,
+      'body',
+      'userId',
+      'userId',
     ),
   )
   @ApiSuccessResponse(GoalType)

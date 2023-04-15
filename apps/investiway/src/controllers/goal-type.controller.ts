@@ -48,8 +48,7 @@ export class GoalTypeController {
       CaslAction.Read,
       GoalType,
       'query',
-      'userId',
-      'userId',
+      [{ clazz: 'userId', request: 'userId' }],
     ),
   )
   @ApiPaginatedResponse(GoalType)
@@ -66,11 +65,10 @@ export class GoalTypeController {
   @Post()
   @CheckCasl(
     new MatchFieldRequestCasl<GoalTypeCreateOrEditBody, GoalType>(
-      CaslAction.Read,
+      CaslAction.Create,
       GoalType,
       'body',
-      'userId',
-      'userId',
+      [{ clazz: 'userId', request: 'userId' }],
     ),
   )
   @ApiSuccessResponse(GoalType)

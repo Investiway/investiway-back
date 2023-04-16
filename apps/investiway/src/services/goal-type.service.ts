@@ -102,7 +102,9 @@ export class GoalTypeService {
 
   insert(data: GoalTypeCreateOrEditBody) {
     // casl can't inside scope, because controller checked
-    return this.goalTypeModel.insertMany([convertToObjectId(data, 'userId')]);
+    return this.goalTypeModel
+      .insertMany([convertToObjectId(data, 'userId')])
+      .then((r) => r?.[0]);
   }
 
   async update(id: string, data: GoalTypeCreateOrEditBody, authorizator: User) {

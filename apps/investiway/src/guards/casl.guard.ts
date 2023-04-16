@@ -1,6 +1,7 @@
 import {
   CanActivate,
   ExecutionContext,
+  HttpException,
   Injectable,
   SetMetadata,
 } from '@nestjs/common';
@@ -8,6 +9,7 @@ import { ModuleRef, Reflector } from '@nestjs/core';
 import { AppAbility, CaslAppFactory } from '../casl/casl.factory';
 import { Request } from 'express';
 import { PromiseLike } from 'src/types/common';
+import { ResponseDto } from 'src/dtos/response.dto';
 
 export interface ICaslHandler {
   handle(
@@ -47,7 +49,14 @@ export class CaslGuard implements CanActivate {
     for (const handler of policyHandlers) {
       const r = await this.execPolicyHandler(handler, ability, request);
       if (!r) {
-        return false;
+        const response: ResponseDto<any> = {
+          success: false,
+          error: {
+            statusCode: 403,
+            message: 'Authroization',
+          },
+        };
+        throw new HttpException(response, 403);
       }
     }
     return true;

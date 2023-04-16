@@ -5,6 +5,9 @@ import { JwtConfig } from '../configs/jwt.config';
 import { SchemaModule } from '../schema/schema.module';
 import { UserService } from './user.service';
 import { GoalTypeService } from './goal-type.service';
+import { CaslAppFactory } from 'src/casl/casl.factory';
+
+const services = [AuthService, UserService, GoalTypeService];
 
 @Module({
   imports: [
@@ -13,7 +16,7 @@ import { GoalTypeService } from './goal-type.service';
     }),
     SchemaModule,
   ],
-  providers: [AuthService, UserService, GoalTypeService],
-  exports: [AuthService, UserService, GoalTypeService],
+  providers: [CaslAppFactory, ...services],
+  exports: services,
 })
 export class ServicesModule {}

@@ -1,13 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from '../schema/user.schema';
+import { User } from '../schema/user.schema';
 import { Model, PipelineStage } from 'mongoose';
 import { Types } from 'mongoose';
-import {
-  GoalType,
-  GoalTypeDocument,
-  GoalTypeSchema,
-} from '../schema/goal-type.schema';
+import { GoalType, GoalTypeDocument } from '../schema/goal-type.schema';
 import {
   GoalTypeCreateOrEditBody,
   GoalTypeSearchQuery,
@@ -20,14 +16,23 @@ import {
 } from '../dtos/page.dto';
 import { PageUtils } from '../utils/page.utils';
 import { SchemaUtils } from '../utils/schema.utils';
+import {
+  caslObject2String,
+  convert,
+  convertToObjectId,
+} from 'src/utils/common.util';
+import { CaslAppFactory } from 'src/casl/casl.factory';
+import { CaslAction } from 'src/casl/casl.enum';
 
 @Injectable()
 export class GoalTypeService {
   constructor(
     @InjectModel(GoalType.name) private goalTypeModel: Model<GoalTypeDocument>,
+    private readonly caslAppFactory: CaslAppFactory,
   ) {}
 
   async search(search: GoalTypeSearchQuery, page: PageOptionsDto) {
+    // casl can't inside scope, because controller checked
     const pipeline: PipelineStage[] = [];
     if (search.userId) {
       pipeline.push({
@@ -52,18 +57,38 @@ export class GoalTypeService {
     return result;
   }
 
-  getById(id: string) {
-    return this.goalTypeModel
-      .aggregate([
-        SchemaUtils.getMatchIsNotDelete({
-          _id: new Types.ObjectId(id),
-        }),
-      ])
-      .exec();
+  getById(id: string, authorizator: User): Promise<GoalType> {
+    return this.checkAuthorization(id, authorizator, CaslAction.Read);
   }
 
-  softDelete(id: string) {
-    return this.goalTypeModel.updateOne(
+  private async checkAuthorization(
+    id: string,
+    authorizator: User,
+    caslAction: CaslAction,
+  ) {
+    const r = await this.goalTypeModel.findOne(
+      SchemaUtils.getIsNotDelete({
+        _id: new Types.ObjectId(id),
+      }),
+    );
+    if (!r) {
+      throw new NotFoundException();
+    }
+    const casl = this.caslAppFactory.createForUser(authorizator);
+    const authroization = casl.cannot(
+      caslAction,
+      caslObject2String(GoalType, convert<GoalType>(r.toJSON()), 'userId'),
+    );
+    if (authroization) {
+      throw new ForbiddenException();
+    }
+    return r;
+  }
+
+  async softDelete(id: string, authorizator: User) {
+    // casl authorizator
+    await this.checkAuthorization(id, authorizator, CaslAction.Delete);
+    return await this.goalTypeModel.updateOne(
       SchemaUtils.getIsNotDelete({
         _id: new Types.ObjectId(id),
       }),
@@ -76,18 +101,19 @@ export class GoalTypeService {
   }
 
   insert(data: GoalTypeCreateOrEditBody) {
-    return this.goalTypeModel.insertMany([data]);
+    // casl can't inside scope, because controller checked
+    return this.goalTypeModel.insertMany([convertToObjectId(data, 'userId')]);
   }
 
-  update(id: string, data: GoalTypeCreateOrEditBody) {
-    return this.goalTypeModel.updateOne(
+  async update(id: string, data: GoalTypeCreateOrEditBody, authorizator: User) {
+    // casl authorizator, data can't check authroization 'userid' because check inside controller
+    await this.checkAuthorization(id, authorizator, CaslAction.Update);
+    return await this.goalTypeModel.updateOne(
       SchemaUtils.getIsNotDelete({
         _id: new Types.ObjectId(id),
       }),
       {
-        $set: {
-          ...data,
-        },
+        $set: convertToObjectId(data, 'userId'),
       },
     );
   }

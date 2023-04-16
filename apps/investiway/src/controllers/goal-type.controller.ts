@@ -28,8 +28,9 @@ import { ApiSuccessResponse } from '../decorators/response.decorator';
 import { SchemaUpdateDto } from '../dtos/schema.dto';
 import { CaslGuard, CheckCasl } from '../guards/casl.guard';
 import { CaslAction } from '../casl/casl.enum';
-import { plainToClass } from 'class-transformer';
 import { MatchFieldRequestCasl } from 'src/casl/common/match-field-request.casl';
+import { GetUser } from 'src/decorators/get-user.decorator';
+import { User } from 'src/schema/user.schema';
 
 @UseGuards(AuthGuard('jwt-access'), CaslGuard)
 @ApiBearerAuth()
@@ -57,9 +58,10 @@ export class GoalTypeController {
   }
 
   @Get(':id')
+  @CheckCasl((ability) => ability.can(CaslAction.Read, GoalType))
   @UseInterceptors(ResponseIntercept)
-  getOne(@Param() params: GoalTypeGetOneParams) {
-    return this.goalTypeService.getById(params.id);
+  getOne(@Param() params: GoalTypeGetOneParams, @GetUser() user: User) {
+    return this.goalTypeService.getById(params.id, user);
   }
 
   @Post()
@@ -77,23 +79,27 @@ export class GoalTypeController {
   }
 
   @Put(':id')
-  @CheckCasl((ability, request) =>
-    ability.can(
-      CaslAction.Read,
-      plainToClass(GoalType, { userId: request.body.userId }),
+  @CheckCasl(
+    new MatchFieldRequestCasl<GoalTypeCreateOrEditBody, GoalType>(
+      CaslAction.Update,
+      GoalType,
+      'body',
+      [{ clazz: 'userId', request: 'userId' }],
     ),
   )
   @ApiSuccessResponse(SchemaUpdateDto)
   edit(
     @Param() params: GoalTypeCreateOrEditParams,
     @Body() data: GoalTypeCreateOrEditBody,
+    @GetUser() user: User,
   ) {
-    return this.goalTypeService.update(params.id, data);
+    return this.goalTypeService.update(params.id, data, user);
   }
 
   @Delete(':id')
+  @CheckCasl((ability) => ability.can(CaslAction.Delete, GoalType))
   @ApiSuccessResponse(SchemaUpdateDto)
-  delete(@Param() params: GoalTypeDeleteParams) {
-    return this.goalTypeService.softDelete(params.id);
+  delete(@Param() params: GoalTypeDeleteParams, @GetUser() user: User) {
+    return this.goalTypeService.softDelete(params.id, user);
   }
 }

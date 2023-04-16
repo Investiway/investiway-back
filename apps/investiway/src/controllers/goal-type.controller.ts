@@ -10,7 +10,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiParam, ApiProperty, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { ResponseIntercept } from '../intercepts/response.intercept';
 import { ApiPaginatedResponse } from '../decorators/api-paginated-reponse.decorator';
@@ -28,7 +28,9 @@ import { ApiSuccessResponse } from '../decorators/response.decorator';
 import { SchemaUpdateDto } from '../dtos/schema.dto';
 import { CaslGuard, CheckCasl } from '../guards/casl.guard';
 import { CaslAction } from '../casl/casl.enum';
-import { plainToClass } from 'class-transformer';
+import { MatchFieldRequestCasl } from 'src/casl/common/match-field-request.casl';
+import { GetUser } from 'src/decorators/get-user.decorator';
+import { User } from 'src/schema/user.schema';
 
 @UseGuards(AuthGuard('jwt-access'), CaslGuard)
 @ApiBearerAuth()
@@ -42,10 +44,12 @@ export class GoalTypeController {
   constructor(private readonly goalTypeService: GoalTypeService) {}
 
   @Get('search')
-  @CheckCasl((ability, request) =>
-    ability.can(
+  @CheckCasl(
+    new MatchFieldRequestCasl<GoalTypeSearchQuery, GoalType>(
       CaslAction.Read,
-      plainToClass(GoalType, { userId: request.query.userId }),
+      GoalType,
+      'query',
+      [{ clazz: 'userId', request: 'userId' }],
     ),
   )
   @ApiPaginatedResponse(GoalType)
@@ -54,16 +58,19 @@ export class GoalTypeController {
   }
 
   @Get(':id')
+  @CheckCasl((ability) => ability.can(CaslAction.Read, GoalType))
   @UseInterceptors(ResponseIntercept)
-  getOne(@Param() params: GoalTypeGetOneParams) {
-    return this.goalTypeService.getById(params.id);
+  getOne(@Param() params: GoalTypeGetOneParams, @GetUser() user: User) {
+    return this.goalTypeService.getById(params.id, user);
   }
 
   @Post()
-  @CheckCasl((ability, request) =>
-    ability.can(
-      CaslAction.Read,
-      plainToClass(GoalType, { userId: request.body.userId }),
+  @CheckCasl(
+    new MatchFieldRequestCasl<GoalTypeCreateOrEditBody, GoalType>(
+      CaslAction.Create,
+      GoalType,
+      'body',
+      [{ clazz: 'userId', request: 'userId' }],
     ),
   )
   @ApiSuccessResponse(GoalType)
@@ -72,23 +79,27 @@ export class GoalTypeController {
   }
 
   @Put(':id')
-  @CheckCasl((ability, request) =>
-    ability.can(
-      CaslAction.Read,
-      plainToClass(GoalType, { userId: request.body.userId }),
+  @CheckCasl(
+    new MatchFieldRequestCasl<GoalTypeCreateOrEditBody, GoalType>(
+      CaslAction.Update,
+      GoalType,
+      'body',
+      [{ clazz: 'userId', request: 'userId' }],
     ),
   )
   @ApiSuccessResponse(SchemaUpdateDto)
   edit(
     @Param() params: GoalTypeCreateOrEditParams,
     @Body() data: GoalTypeCreateOrEditBody,
+    @GetUser() user: User,
   ) {
-    return this.goalTypeService.update(params.id, data);
+    return this.goalTypeService.update(params.id, data, user);
   }
 
   @Delete(':id')
+  @CheckCasl((ability) => ability.can(CaslAction.Delete, GoalType))
   @ApiSuccessResponse(SchemaUpdateDto)
-  delete(@Param() params: GoalTypeDeleteParams) {
-    return this.goalTypeService.softDelete(params.id);
+  delete(@Param() params: GoalTypeDeleteParams, @GetUser() user: User) {
+    return this.goalTypeService.softDelete(params.id, user);
   }
 }

@@ -4,7 +4,6 @@ import {
   AbilityClass,
   ExtractSubjectType,
   InferSubjects,
-  mongoQueryMatcher,
 } from '@casl/ability';
 import { CaslAction } from './casl.enum';
 import { User } from '../schema/user.schema';

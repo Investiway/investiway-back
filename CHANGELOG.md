@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/Investiway/investiway-back/compare/v1.1.0...v1.2.0) (2023-04-17)
+
+
+### Features
+
+* **goal:**  done goal ([a7f522c](https://github.com/Investiway/investiway-back/commit/a7f522c336bf936d15312782ed5c5676d0fb03ca))
+* **goal:** add compute amount per month ([7e5b022](https://github.com/Investiway/investiway-back/commit/7e5b022d50ebc43cdbb7d956837c1515e1348572))
+* **test:** add test goal ([5648756](https://github.com/Investiway/investiway-back/commit/5648756d147bb07b5a20d74e140929e5ac54c73f))
+
 ## [1.1.0](https://github.com/Investiway/investiway-back/compare/v1.0.2...v1.1.0) (2023-04-16)
 
 

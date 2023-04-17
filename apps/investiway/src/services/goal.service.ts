@@ -7,11 +7,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../schema/user.schema';
 import { Model, PipelineStage } from 'mongoose';
 import { Types } from 'mongoose';
-import { GoalType, GoalTypeDocument } from '../schema/goal-type.schema';
-import {
-  GoalTypeCreateOrEditBody,
-  GoalTypeSearchQuery,
-} from '../dtos/goal-type.dto';
+import { Goal, GoalDocument } from '../schema/goal.schema';
+import { GoalCreateOrEditBody, GoalSearchQuery } from '../dtos/goal.dto';
 import {
   PageDto,
   PageMetaDto,
@@ -27,20 +24,37 @@ import {
 } from 'src/utils/common.util';
 import { CaslAppFactory } from 'src/casl/casl.factory';
 import { CaslAction } from 'src/casl/casl.enum';
+import { GoalTypeService } from './goal-type.service';
+import * as moment from 'moment';
 
 @Injectable()
-export class GoalTypeService {
+export class GoalService {
   constructor(
-    @InjectModel(GoalType.name) private goalTypeModel: Model<GoalTypeDocument>,
+    @InjectModel(Goal.name) private goalModel: Model<GoalDocument>,
     private readonly caslAppFactory: CaslAppFactory,
+    private readonly goalTypeService: GoalTypeService,
   ) {}
 
-  async search(search: GoalTypeSearchQuery, page: PageOptionsDto) {
+  async search(
+    search: GoalSearchQuery,
+    page: PageOptionsDto,
+    authorizator: User,
+  ) {
     // casl can't inside scope, because controller checked
     const pipeline: PipelineStage[] = [];
     if (search.userId) {
       pipeline.push({
         $match: { userId: new Types.ObjectId(search.userId) },
+      });
+    }
+    if (search.typeId) {
+      await this.goalTypeService.checkAuthorization(
+        search.typeId,
+        authorizator,
+        CaslAction.Read,
+      );
+      pipeline.push({
+        $match: { typeId: new Types.ObjectId(search.typeId) },
       });
     }
     if (search.search) {
@@ -51,17 +65,17 @@ export class GoalTypeService {
       });
     }
     pipeline.push(SchemaUtils.getMatchIsNotDelete());
-    const total = await PageUtils.countItems(this.goalTypeModel, pipeline);
+    const total = await PageUtils.countItems(this.goalModel, pipeline);
 
     PageUtils.pushLimitAndOrder(pipeline, page);
-    const data = await this.goalTypeModel.aggregate(pipeline).exec();
+    const data = await this.goalModel.aggregate(pipeline).exec();
     const pageMetaParamsDto = new PageMetaDtoParameters(page, total);
     const pageMetaDto = new PageMetaDto(pageMetaParamsDto);
     const result = new PageDto(data, pageMetaDto);
     return result;
   }
 
-  getById(id: string, authorizator: User): Promise<GoalType> {
+  getById(id: string, authorizator: User): Promise<Goal> {
     return this.checkAuthorization(id, authorizator, CaslAction.Read);
   }
 
@@ -70,7 +84,7 @@ export class GoalTypeService {
     authorizator: User,
     caslAction: CaslAction,
   ) {
-    const r = await this.goalTypeModel.findOne(
+    const r = await this.goalModel.findOne(
       SchemaUtils.getIsNotDelete({
         _id: new Types.ObjectId(id),
       }),
@@ -81,7 +95,7 @@ export class GoalTypeService {
     const casl = this.caslAppFactory.createForUser(authorizator);
     const authroization = casl.cannot(
       caslAction,
-      caslObject2String(GoalType, convert<GoalType>(r.toJSON()), 'userId'),
+      caslObject2String(Goal, convert<Goal>(r.toJSON()), 'userId'),
     );
     if (authroization) {
       throw new ForbiddenException();
@@ -92,7 +106,7 @@ export class GoalTypeService {
   async softDelete(id: string, authorizator: User) {
     // casl authorizator
     await this.checkAuthorization(id, authorizator, CaslAction.Delete);
-    return await this.goalTypeModel.updateOne(
+    return await this.goalModel.updateOne(
       SchemaUtils.getIsNotDelete({
         _id: new Types.ObjectId(id),
       }),
@@ -104,23 +118,51 @@ export class GoalTypeService {
     );
   }
 
-  insert(data: GoalTypeCreateOrEditBody) {
+  async insert(data: GoalCreateOrEditBody, authorizator: User) {
     // casl can't inside scope, because controller checked
-    return this.goalTypeModel
-      .insertMany([convertToObjectId(data, 'userId')])
+    await this.goalTypeService.checkAuthorization(
+      data.typeId,
+      authorizator,
+      CaslAction.Read,
+    );
+
+    const amountMinimumPerMonth = this.computeAmountPerMonth(data);
+    return this.goalModel
+      .insertMany([
+        {
+          ...convertToObjectId(data, 'userId', 'typeId'),
+          amountMinimumPerMonth,
+        },
+      ])
       .then((r) => r?.[0]);
   }
 
-  async update(id: string, data: GoalTypeCreateOrEditBody, authorizator: User) {
+  async update(id: string, data: GoalCreateOrEditBody, authorizator: User) {
     // casl authorizator, data can't check authroization 'userid' because check inside controller
     await this.checkAuthorization(id, authorizator, CaslAction.Update);
-    return await this.goalTypeModel.updateOne(
+    await this.goalTypeService.checkAuthorization(
+      data.typeId,
+      authorizator,
+      CaslAction.Read,
+    );
+
+    const amountMinimumPerMonth = this.computeAmountPerMonth(data);
+    return await this.goalModel.updateOne(
       SchemaUtils.getIsNotDelete({
         _id: new Types.ObjectId(id),
       }),
       {
-        $set: convertToObjectId(data, 'userId'),
+        $set: {
+          ...convertToObjectId(data, 'userId', 'typeId'),
+          amountMinimumPerMonth,
+        },
       },
     );
+  }
+
+  private computeAmountPerMonth(data: GoalCreateOrEditBody): number {
+    const target = moment(data.completeDate);
+    const month = target.diff(moment(), 'month');
+    return Math.round(data.amountTarget / Math.max(1, month));
   }
 }

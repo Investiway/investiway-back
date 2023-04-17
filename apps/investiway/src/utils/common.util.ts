@@ -1,6 +1,9 @@
 import { plainToClass } from 'class-transformer';
 import { Types } from 'mongoose';
 
+export const MAX_NUMBER = 2 ** 63 - 1;
+export const MIN_NUMBER = (-2) ** 63;
+
 export const convert = <T>(c: any) => c as T;
 
 export const convertToObjectId = <T>(data: T, ...keys: (keyof T)[]) => {

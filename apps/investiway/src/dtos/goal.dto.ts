@@ -1,8 +1,18 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import {
+  IsDateString,
+  IsInt,
+  IsOptional,
+  IsString,
+  Max,
+  MaxLength,
+  Min,
+  MinLength,
+} from 'class-validator';
 import { IsObjectId } from '../validators/is-object-id.validate';
+import { MAX_NUMBER } from 'src/utils/common.util';
 
-export class GoalTypeSearchQuery {
+export class GoalSearchQuery {
   @ApiPropertyOptional()
   @IsOptional()
   search: string;
@@ -11,27 +21,32 @@ export class GoalTypeSearchQuery {
   @IsOptional()
   @IsObjectId()
   userId: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsObjectId()
+  typeId: string;
 }
 
-export class GoalTypeGetOneParams {
+export class GoalGetOneParams {
   @ApiProperty()
   @IsObjectId()
   id: string;
 }
 
-export class GoalTypeDeleteParams {
+export class GoalDeleteParams {
   @ApiProperty()
   @IsObjectId()
   id: string;
 }
 
-export class GoalTypeCreateOrEditParams {
+export class GoalCreateOrEditParams {
   @ApiProperty()
   @IsObjectId()
   id: string;
 }
 
-export class GoalTypeCreateOrEditBody {
+export class GoalCreateOrEditBody {
   @ApiProperty()
   @IsString()
   @IsOptional()
@@ -45,6 +60,20 @@ export class GoalTypeCreateOrEditBody {
   @MinLength(1)
   @MaxLength(1024)
   description: string;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  @Max(MAX_NUMBER)
+  amountTarget: number;
+
+  @ApiProperty()
+  @IsDateString()
+  completeDate: Date;
+
+  @ApiProperty()
+  @IsObjectId()
+  typeId: string;
 
   @ApiProperty()
   @IsObjectId()

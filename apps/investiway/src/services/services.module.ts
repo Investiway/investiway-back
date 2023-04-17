@@ -6,8 +6,9 @@ import { SchemaModule } from '../schema/schema.module';
 import { UserService } from './user.service';
 import { GoalTypeService } from './goal-type.service';
 import { CaslAppFactory } from 'src/casl/casl.factory';
+import { GoalService } from './goal.service';
 
-const services = [AuthService, UserService, GoalTypeService];
+const services = [AuthService, UserService, GoalTypeService, GoalService];
 
 @Module({
   imports: [

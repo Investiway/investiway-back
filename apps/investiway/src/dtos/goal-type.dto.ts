@@ -1,12 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import {
-  IsOptional,
-  IsString,
-  Max,
-  MaxLength,
-  Min,
-  MinLength,
-} from 'class-validator';
+import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 import { IsObjectId } from '../validators/is-object-id.validate';
 
 export class GoalTypeSearchQuery {

@@ -25,6 +25,7 @@ import {
 import { CaslAppFactory } from 'src/casl/casl.factory';
 import { CaslAction } from 'src/casl/casl.enum';
 import { GoalTypeService } from './goal-type.service';
+import * as moment from 'moment';
 
 @Injectable()
 export class GoalService {
@@ -124,8 +125,15 @@ export class GoalService {
       authorizator,
       CaslAction.Read,
     );
+
+    const amountMinimumPerMonth = this.computeAmountPerMonth(data);
     return this.goalModel
-      .insertMany([convertToObjectId(data, 'userId', 'typeId')])
+      .insertMany([
+        {
+          ...convertToObjectId(data, 'userId', 'typeId'),
+          amountMinimumPerMonth,
+        },
+      ])
       .then((r) => r?.[0]);
   }
 
@@ -137,13 +145,24 @@ export class GoalService {
       authorizator,
       CaslAction.Read,
     );
+
+    const amountMinimumPerMonth = this.computeAmountPerMonth(data);
     return await this.goalModel.updateOne(
       SchemaUtils.getIsNotDelete({
         _id: new Types.ObjectId(id),
       }),
       {
-        $set: convertToObjectId(data, 'userId', 'typeId'),
+        $set: {
+          ...convertToObjectId(data, 'userId', 'typeId'),
+          amountMinimumPerMonth,
+        },
       },
     );
+  }
+
+  private computeAmountPerMonth(data: GoalCreateOrEditBody): number {
+    const target = moment(data.completeDate);
+    const month = target.diff(moment(), 'month');
+    return Math.round(data.amountTarget / Math.max(1, month));
   }
 }

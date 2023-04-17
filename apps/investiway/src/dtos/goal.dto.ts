@@ -68,12 +68,6 @@ export class GoalCreateOrEditBody {
   amountTarget: number;
 
   @ApiProperty()
-  @IsInt()
-  @Min(0)
-  @Max(MAX_NUMBER)
-  amountMinimumPerMonth: number;
-
-  @ApiProperty()
   @IsDateString()
   completeDate: Date;
 

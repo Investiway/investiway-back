@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.5](https://github.com/Investiway/investiway-back/compare/v1.3.4...v1.3.5) (2023-04-18)
+
+
+### Bug Fixes
+
+* **deploy:** vercel ([5f65240](https://github.com/Investiway/investiway-back/commit/5f6524002200ad8287127282df28d48c7bdea2ca))
+
 ### [1.3.4](https://github.com/Investiway/investiway-back/compare/v1.3.3...v1.3.4) (2023-04-18)
 
 

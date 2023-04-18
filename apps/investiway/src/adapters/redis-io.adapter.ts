@@ -15,10 +15,18 @@ export class RedisIoAdapter extends IoAdapter {
     this.configService = app.get(ConfigService);
   }
 
-  async connectToRedis(): Promise<void> {
+  getUri() {
+    const uri = this.configService.get('IY_REDIS_URI');
+    if (uri) {
+      return uri;
+    }
     const host = this.configService.get('IY_REDIS_HOST');
     const port = this.configService.get('IY_REDIS_PORT');
-    const pubClient = createClient({ url: `redis://${host}:${port}` });
+    return `redis://${host}:${port}`;
+  }
+
+  async connectToRedis(): Promise<void> {
+    const pubClient = createClient({ url: this.getUri() });
     const subClient = pubClient.duplicate();
 
     await Promise.all([pubClient.connect(), subClient.connect()]);

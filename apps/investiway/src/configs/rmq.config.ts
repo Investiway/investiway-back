@@ -14,23 +14,32 @@ export class RmqConfigService {
     return connect(`amqp://${host}:${port}`);
   }
 
-  async createConnectionObservable(onClose?: () => void, reconnect = 3000) {
+  getUri() {
+    const uri = this.configService.get('IY_RMQ_URI');
+    if (uri) {
+      return uri;
+    }
+
     const host = this.configService.get('IY_RMQ_HOST');
     const port = this.configService.get('IY_RMQ_PORT');
+    return `amqp://${host}:${port}`;
+  }
+
+  async createConnectionObservable(onClose?: () => void, reconnect = 3000) {
     const connectSubject = new BehaviorSubject<Connection>(null);
     const createConnection = async () => {
       try {
-        const con = await connect(`amqp://${host}:${port}`);
+        const con = await connect(this.getUri());
         con.once('error', (e) => {
           this.logger.error(e);
         });
         con.once('close', () => {
-          this.logger.warn(`${host}:${port} rmq closed!`);
+          this.logger.warn(`${this.getUri()} rmq closed!`);
           onClose?.();
           setTimeout(() => createConnection(), reconnect);
         });
         connectSubject.next(con);
-        this.logger.log(`${host}:${port} rmq connected!`);
+        this.logger.log(`${this.getUri()} rmq connected!`);
       } catch (e) {
         this.logger.error(e);
         setTimeout(() => createConnection(), reconnect);

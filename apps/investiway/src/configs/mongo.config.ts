@@ -12,6 +12,13 @@ export class MongoConfig implements MongooseOptionsFactory {
   createMongooseOptions():
     | Promise<MongooseModuleOptions>
     | MongooseModuleOptions {
+    const uriEnv = this.configService.get('IY_MONGO_URI');
+    if (uriEnv) {
+      return {
+        uri: uriEnv,
+      };
+    }
+
     const host = this.configService.get('IY_MONGO_HOST');
     const port = this.configService.get('IY_MONGO_PORT');
     const db = this.configService.get('IY_MONGO_DB');

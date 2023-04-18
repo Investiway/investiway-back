@@ -1,9 +1,8 @@
-name: deploy
+name: Deploy Vercel
 on:
-  workflow_run:
-    workflows: ["Continuous Integration Testing"]
-    types:
-      - completed
+  push:
+    tags:        
+      - '*'
 
 jobs:
   deploy:
@@ -15,7 +14,6 @@ jobs:
           [
             investiway
           ]
-    if: github.event.workflow_run.event == 'released'
     steps:
       - name: Pull
         uses: actions/checkout@v2

@@ -1,4 +1,4 @@
-name: Deploy Vercel
+name: Deploy Render
 on:
   push:
     tags:        
@@ -15,15 +15,12 @@ jobs:
             investiway
           ]
     steps:
-      - name: Pull
-        uses: actions/checkout@v2
+      - name: Wait for Render Deployment
+        uses: bounceapp/render-action@0.6.0
         with:
-          node-version: ${{ matrix.node-version }}
-      - uses: borales/actions-yarn@v3.0.0
-        with:
-          cmd: install
-      - name: Install & build
-        run: |
-          cd apps/investiway
-          yarn
-          yarn build
+          render-token: ${{ secrets.RENDER_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          service-id: ${{ secrets.RENDER_SERVICE }}
+          retries: 3
+          wait: 16000
+          sleep: 30000

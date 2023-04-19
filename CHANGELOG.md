@@ -9,11 +9,6 @@ All notable changes to this project will be documented in this file. See [standa
 
 * **deploy:** call webhook ([20a041f](https://github.com/Investiway/investiway-back/commit/20a041f2faf8d4ebda2cde8c3ba11f1c14c18c65))
 
-### [1.4.1](https://github.com/Investiway/investiway-back/compare/v1.4.0...v1.4.1) (2023-04-19)
-
-
-### Bug Fixes
-
 * **deploy:** render config ([5baaa16](https://github.com/Investiway/investiway-back/commit/5baaa164f5952356bb7ee2083b5c549b156577ed))
 
 ## [1.4.0](https://github.com/Investiway/investiway-back/compare/v1.3.6...v1.4.0) (2023-04-19)
@@ -22,48 +17,6 @@ All notable changes to this project will be documented in this file. See [standa
 ### Features
 
 * **deploy:** add deploy with render ([c27dc94](https://github.com/Investiway/investiway-back/commit/c27dc9415df0abdf99d7d20a578d1d3092f9c7c4))
-
-### [1.3.6](https://github.com/Investiway/investiway-back/compare/v1.3.5...v1.3.6) (2023-04-19)
-
-
-### Bug Fixes
-
-* **deploy:** vercel ([930a312](https://github.com/Investiway/investiway-back/commit/930a312bf312c167873f01f47b564dbafcb5ad0b))
-
-### [1.3.5](https://github.com/Investiway/investiway-back/compare/v1.3.4...v1.3.5) (2023-04-18)
-
-
-### Bug Fixes
-
-* **deploy:** vercel ([5f65240](https://github.com/Investiway/investiway-back/commit/5f6524002200ad8287127282df28d48c7bdea2ca))
-
-### [1.3.4](https://github.com/Investiway/investiway-back/compare/v1.3.3...v1.3.4) (2023-04-18)
-
-
-### Bug Fixes
-
-* **deploy:** vercel config ([c9413b1](https://github.com/Investiway/investiway-back/commit/c9413b18aa2122cac90617efbfe91335c663d4fa))
-
-### [1.3.3](https://github.com/Investiway/investiway-back/compare/v1.3.2...v1.3.3) (2023-04-18)
-
-
-### Bug Fixes
-
-* **deploy:** vercel config ([6056dff](https://github.com/Investiway/investiway-back/commit/6056dff966029f7b41465fcd20652ea4c8ed2e66))
-
-### [1.3.2](https://github.com/Investiway/investiway-back/compare/v1.3.1...v1.3.2) (2023-04-18)
-
-
-### Bug Fixes
-
-* **deploy:** add index file on vercel ([e5bff3a](https://github.com/Investiway/investiway-back/commit/e5bff3adeb9c7b8cb0a739a72a20297c71115d01))
-
-### [1.3.1](https://github.com/Investiway/investiway-back/compare/v1.3.0...v1.3.1) (2023-04-18)
-
-
-### Bug Fixes
-
-* **deploy:** fix gh action vercel ([90ad03b](https://github.com/Investiway/investiway-back/commit/90ad03b554da17c8f8fb291479aaed6079421963))
 
 ## [1.3.0](https://github.com/Investiway/investiway-back/compare/v1.2.0...v1.3.0) (2023-04-18)
 

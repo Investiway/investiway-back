@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.1](https://github.com/Investiway/investiway-back/compare/v1.4.0...v1.4.1) (2023-04-19)
+
+
+### Bug Fixes
+
+* **deploy:** render config ([5baaa16](https://github.com/Investiway/investiway-back/commit/5baaa164f5952356bb7ee2083b5c549b156577ed))
+
 ## [1.4.0](https://github.com/Investiway/investiway-back/compare/v1.3.6...v1.4.0) (2023-04-19)
 
 

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.2](https://github.com/Investiway/investiway-back/compare/v1.4.1...v1.4.2) (2023-04-19)
+
+
+### Bug Fixes
+
+* **deploy:** call webhook ([20a041f](https://github.com/Investiway/investiway-back/commit/20a041f2faf8d4ebda2cde8c3ba11f1c14c18c65))
+
 ### [1.4.1](https://github.com/Investiway/investiway-back/compare/v1.4.0...v1.4.1) (2023-04-19)
 
 

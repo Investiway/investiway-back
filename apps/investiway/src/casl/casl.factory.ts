@@ -9,6 +9,7 @@ import { CaslAction } from './casl.enum';
 import { User } from '../schema/user.schema';
 import { GoalType } from '../schema/goal-type.schema';
 import { Goal } from 'src/schema/goal.schema';
+import { Note } from 'src/schema/note.schema';
 
 type Subjects =
   | InferSubjects<typeof User | typeof GoalType | typeof Goal>
@@ -35,6 +36,12 @@ export class CaslAppFactory {
     can(CaslAction.Update, Goal, { userId });
     can(CaslAction.Delete, Goal, { userId });
     can(CaslAction.Create, Goal, { userId });
+
+    // note
+    can(CaslAction.Read, Note, { userId });
+    can(CaslAction.Update, Note, { userId });
+    can(CaslAction.Delete, Note, { userId });
+    can(CaslAction.Create, Note, { userId });
 
     return build({
       detectSubjectType: (item) =>

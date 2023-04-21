@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/Investiway/investiway-back/compare/v1.4.2...v1.5.0) (2023-04-21)
+
+
+### Features
+
+* **note:** add CRUD note + note casl ([f2ddc70](https://github.com/Investiway/investiway-back/commit/f2ddc707003bd2426ad540769aa7a757fbec06c3))
+
 ### [1.4.2](https://github.com/Investiway/investiway-back/compare/v1.4.1...v1.4.2) (2023-04-19)
 
 

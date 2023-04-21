@@ -33,6 +33,8 @@ async function bootstrap() {
     .addTag('auth')
     .addTag('goal')
     .addTag('goal-type')
+    .addTag('note')
+    .addTag('plan')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('documents', app, document, {

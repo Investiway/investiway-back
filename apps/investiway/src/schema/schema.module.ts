@@ -4,6 +4,7 @@ import { MongoConfig } from '../configs/mongo.config';
 import { User, UserSchema } from './user.schema';
 import { GoalType, GoalTypeSchema } from './goal-type.schema';
 import { Goal, GoalSchema } from './goal.schema';
+import { Note, NoteSchema } from './note.schema';
 
 export const features: ModelDefinition[] = [
   {
@@ -17,6 +18,10 @@ export const features: ModelDefinition[] = [
   {
     name: Goal.name,
     schema: GoalSchema,
+  },
+  {
+    name: Note.name,
+    schema: NoteSchema,
   },
 ];
 

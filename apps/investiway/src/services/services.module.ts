@@ -7,8 +7,15 @@ import { UserService } from './user.service';
 import { GoalTypeService } from './goal-type.service';
 import { CaslAppFactory } from 'src/casl/casl.factory';
 import { GoalService } from './goal.service';
+import { NoteService } from './note.service';
 
-const services = [AuthService, UserService, GoalTypeService, GoalService];
+const services = [
+  AuthService,
+  UserService,
+  GoalTypeService,
+  GoalService,
+  NoteService,
+];
 
 @Module({
   imports: [

@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.6.1](https://github.com/Investiway/investiway-back/compare/v1.6.0...v1.6.1) (2023-04-22)
+
+
+### Bug Fixes
+
+* **casl:** casl on goal and note search ([4c16100](https://github.com/Investiway/investiway-back/commit/4c1610087ec16943c4279d25d05f8e43288ea990))
+* **validate:** fix note, goal search validate ([aa80f70](https://github.com/Investiway/investiway-back/commit/aa80f70a73ac41ee1f192e9f828d011d8b47715c))
+
 ## [1.6.0](https://github.com/Investiway/investiway-back/compare/v1.5.0...v1.6.0) (2023-04-22)
 
 

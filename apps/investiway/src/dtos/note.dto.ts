@@ -4,7 +4,10 @@ import { IsObjectId } from '../validators/is-object-id.validate';
 
 export class NoteSearchQuery {
   @ApiPropertyOptional()
+  @IsString()
   @IsOptional()
+  @MinLength(1)
+  @MaxLength(255)
   search: string;
 
   @ApiPropertyOptional()

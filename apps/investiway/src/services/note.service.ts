@@ -32,14 +32,31 @@ export class NoteService {
     private readonly caslAppFactory: CaslAppFactory,
   ) {}
 
-  async search(search: NoteSearchQuery, page: PageOptionsDto) {
+  async search(
+    search: NoteSearchQuery,
+    page: PageOptionsDto,
+    authorizator: User,
+  ) {
     // casl can't inside scope, because controller checked
     const pipeline: PipelineStage[] = [];
+    const caslObject: Partial<Note> = {};
     if (search.userId) {
+      const userId = new Types.ObjectId(search.userId);
       pipeline.push({
-        $match: { userId: new Types.ObjectId(search.userId) },
+        $match: { userId },
       });
+      caslObject.userId = userId as any;
     }
+
+    const casl = this.caslAppFactory.createForUser(authorizator);
+    const canSearch = casl.cannot(
+      CaslAction.Read,
+      caslObject2String(Note, convert<Note>(caslObject), 'userId'),
+    );
+    if (canSearch) {
+      throw new ForbiddenException();
+    }
+
     if (search.search) {
       pipeline.push({
         $match: {

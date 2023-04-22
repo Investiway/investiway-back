@@ -26,6 +26,7 @@ import { CaslAppFactory } from 'src/casl/casl.factory';
 import { CaslAction } from 'src/casl/casl.enum';
 import { GoalTypeService } from './goal-type.service';
 import * as moment from 'moment';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class GoalService {
@@ -42,10 +43,13 @@ export class GoalService {
   ) {
     // casl can't inside scope, because controller checked
     const pipeline: PipelineStage[] = [];
+    const caslObject: Partial<Goal> = {};
     if (search.userId) {
+      const userId = new Types.ObjectId(search.userId);
       pipeline.push({
-        $match: { userId: new Types.ObjectId(search.userId) },
+        $match: { userId },
       });
+      caslObject.userId = userId as any;
     }
     if (search.typeId) {
       await this.goalTypeService.checkAuthorization(
@@ -53,10 +57,23 @@ export class GoalService {
         authorizator,
         CaslAction.Read,
       );
+      const typeId = new Types.ObjectId(search.typeId);
       pipeline.push({
-        $match: { typeId: new Types.ObjectId(search.typeId) },
+        $match: { typeId },
       });
+      caslObject.typeId = typeId as any;
     }
+
+    const casl = this.caslAppFactory.createForUser(authorizator);
+    if (
+      casl.cannot(
+        CaslAction.Read,
+        caslObject2String(Goal, convert<Goal>(caslObject), 'userId'),
+      )
+    ) {
+      throw new ForbiddenException();
+    }
+
     if (search.search) {
       pipeline.push({
         $match: {

@@ -14,7 +14,10 @@ import { MAX_NUMBER } from 'src/utils/common.util';
 
 export class GoalSearchQuery {
   @ApiPropertyOptional()
+  @IsString()
   @IsOptional()
+  @MinLength(1)
+  @MaxLength(255)
   search: string;
 
   @ApiPropertyOptional()

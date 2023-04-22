@@ -91,7 +91,14 @@ describe('GoalTypeService', () => {
     const search = plainToClass(GoalTypeSearchQuery, {
       userId: userIdExcepted,
     } as Partial<GoalTypeSearchQuery>);
-    const result = await goalTypeService.search(search, pageOptions);
+    const authorizator = {
+      _id: s2id(userIdExcepted) as any,
+    } as User;
+    const result = await goalTypeService.search(
+      search,
+      pageOptions,
+      authorizator,
+    );
     expect(result.meta).toMatchObject({
       hasNextPage: false,
       hasPreviousPage: false,
@@ -112,7 +119,14 @@ describe('GoalTypeService', () => {
     const search = plainToClass(GoalTypeSearchQuery, {
       userId: userIdExcepted,
     } as Partial<GoalTypeSearchQuery>);
-    const result = await goalTypeService.search(search, pageOptions);
+    const authorizator = {
+      _id: s2id(userIdExcepted) as any,
+    } as User;
+    const result = await goalTypeService.search(
+      search,
+      pageOptions,
+      authorizator,
+    );
     expect(result.meta).toMatchObject({
       hasNextPage: true,
       hasPreviousPage: true,
@@ -136,7 +150,14 @@ describe('GoalTypeService', () => {
       search: 'name 3',
       userId: userIdExcepted,
     } as Partial<GoalTypeSearchQuery>);
-    const result = await goalTypeService.search(search, pageOptions);
+    const authorizator = {
+      _id: s2id(userIdExcepted) as any,
+    } as User;
+    const result = await goalTypeService.search(
+      search,
+      pageOptions,
+      authorizator,
+    );
     expect(result.meta).toMatchObject({
       hasNextPage: false,
       hasPreviousPage: false,

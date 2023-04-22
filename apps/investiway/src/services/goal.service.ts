@@ -50,17 +50,17 @@ export class GoalService {
       });
       caslObject.userId = userId as any;
     }
-    if (search.typeId) {
+    if (search.goalTypeId) {
       await this.goalTypeService.checkAuthorization(
-        search.typeId,
+        search.goalTypeId,
         authorizator,
         CaslAction.Read,
       );
-      const typeId = new Types.ObjectId(search.typeId);
+      const goalTypeId = new Types.ObjectId(search.goalTypeId);
       pipeline.push({
-        $match: { typeId },
+        $match: { goalTypeId },
       });
-      caslObject.typeId = typeId as any;
+      caslObject.goalTypeId = goalTypeId as any;
     }
 
     const casl = this.caslAppFactory.createForUser(authorizator);
@@ -137,7 +137,7 @@ export class GoalService {
   async insert(data: GoalCreateOrEditBody, authorizator: User) {
     // casl can't inside scope, because controller checked
     await this.goalTypeService.checkAuthorization(
-      data.typeId,
+      data.goalTypeId,
       authorizator,
       CaslAction.Read,
     );
@@ -146,7 +146,7 @@ export class GoalService {
     return this.goalModel
       .insertMany([
         {
-          ...convertToObjectId(data, 'userId', 'typeId'),
+          ...convertToObjectId(data, 'userId', 'goalTypeId'),
           amountMinimumPerMonth,
         },
       ])
@@ -157,7 +157,7 @@ export class GoalService {
     // casl authorizator, data can't check authroization 'userid' because check inside controller
     await this.checkAuthorization(id, authorizator, CaslAction.Update);
     await this.goalTypeService.checkAuthorization(
-      data.typeId,
+      data.goalTypeId,
       authorizator,
       CaslAction.Read,
     );
@@ -169,7 +169,7 @@ export class GoalService {
       }),
       {
         $set: {
-          ...convertToObjectId(data, 'userId', 'typeId'),
+          ...convertToObjectId(data, 'userId', 'goalTypeId'),
           amountMinimumPerMonth,
         },
       },

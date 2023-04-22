@@ -12,6 +12,10 @@ import {
 import { IsObjectId } from '../validators/is-object-id.validate';
 import { MAX_NUMBER } from 'src/utils/common.util';
 
+export class GoalExtends {
+  goalTypeName: string;
+}
+
 export class GoalSearchQuery {
   @ApiPropertyOptional()
   @IsString()
@@ -28,7 +32,7 @@ export class GoalSearchQuery {
   @ApiPropertyOptional()
   @IsOptional()
   @IsObjectId()
-  typeId: string;
+  goalTypeId: string;
 }
 
 export class GoalGetOneParams {
@@ -76,7 +80,7 @@ export class GoalCreateOrEditBody {
 
   @ApiProperty()
   @IsObjectId()
-  typeId: string;
+  goalTypeId: string;
 
   @ApiProperty()
   @IsObjectId()

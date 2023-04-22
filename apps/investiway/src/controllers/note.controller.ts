@@ -53,8 +53,12 @@ export class NoteController {
     ),
   )
   @ApiPaginatedResponse(Note)
-  search(@Query() search: NoteSearchQuery, @Query() page: PageOptionsDto) {
-    return this.noteService.search(search, page);
+  search(
+    @Query() search: NoteSearchQuery,
+    @Query() page: PageOptionsDto,
+    @GetUser() user: User,
+  ) {
+    return this.noteService.search(search, page, user);
   }
 
   @Get(':id')

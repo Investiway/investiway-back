@@ -53,8 +53,12 @@ export class GoalTypeController {
     ),
   )
   @ApiPaginatedResponse(GoalType)
-  search(@Query() search: GoalTypeSearchQuery, @Query() page: PageOptionsDto) {
-    return this.goalTypeService.search(search, page);
+  search(
+    @Query() search: GoalTypeSearchQuery,
+    @Query() page: PageOptionsDto,
+    @GetUser() user: User,
+  ) {
+    return this.goalTypeService.search(search, page, user);
   }
 
   @Get(':id')

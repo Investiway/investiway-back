@@ -31,7 +31,6 @@ import {
 } from 'src/utils/common.util';
 import { CaslAppFactory } from 'src/casl/casl.factory';
 import { CaslAction } from 'src/casl/casl.enum';
-import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class SpendingTypeService {
@@ -71,7 +70,15 @@ export class SpendingTypeService {
     }
 
     const casl = this.caslAppFactory.createForUser(authorizator);
-    if (casl.cannot(CaslAction.Read, plainToClass(SpendingType, caslObject))) {
+    const canSearch = casl.cannot(
+      CaslAction.Read,
+      caslObject2String(
+        SpendingType,
+        convert<SpendingType>(caslObject),
+        'userId',
+      ),
+    );
+    if (canSearch) {
       throw new ForbiddenException();
     }
 

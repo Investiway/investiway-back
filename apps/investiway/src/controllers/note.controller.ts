@@ -64,6 +64,7 @@ export class NoteController {
   @Get(':id')
   @CheckCasl((ability) => ability.can(CaslAction.Read, Note))
   @UseInterceptors(ResponseIntercept)
+  @ApiSuccessResponse(Note)
   getOne(@Param() params: NoteGetOneParams, @GetUser() user: User) {
     return this.noteService.getById(params.id, user);
   }

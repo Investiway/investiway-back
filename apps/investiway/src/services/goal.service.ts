@@ -26,7 +26,6 @@ import { CaslAppFactory } from 'src/casl/casl.factory';
 import { CaslAction } from 'src/casl/casl.enum';
 import { GoalTypeService } from './goal-type.service';
 import * as moment from 'moment';
-import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class GoalService {

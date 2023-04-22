@@ -63,6 +63,7 @@ export class GoalController {
 
   @Get(':id')
   @CheckCasl((ability) => ability.can(CaslAction.Read, Goal))
+  @ApiSuccessResponse(Goal)
   @UseInterceptors(ResponseIntercept)
   getOne(@Param() params: GoalGetOneParams, @GetUser() user: User) {
     return this.goalService.getById(params.id, user);

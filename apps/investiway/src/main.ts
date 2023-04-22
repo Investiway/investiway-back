@@ -34,7 +34,8 @@ async function bootstrap() {
     .addTag('goal')
     .addTag('goal-type')
     .addTag('note')
-    .addTag('plan')
+    .addTag('spending-type')
+    .addTag('spending')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('documents', app, document, {

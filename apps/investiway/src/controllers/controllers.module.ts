@@ -6,6 +6,7 @@ import { GoalController } from './goal.controller';
 import { GoalTypeController } from './goal-type.controller';
 import { CaslAppFactory } from '../casl/casl.factory';
 import { NoteController } from './note.controller';
+import { SpendingTypeController } from './spending-type.controller';
 
 @Module({
   imports: [ServicesModule],
@@ -15,6 +16,7 @@ import { NoteController } from './note.controller';
     GoalController,
     GoalTypeController,
     NoteController,
+    SpendingTypeController,
   ],
   providers: [CaslAppFactory],
 })

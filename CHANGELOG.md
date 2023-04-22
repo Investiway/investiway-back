@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/Investiway/investiway-back/compare/v1.5.0...v1.6.0) (2023-04-22)
+
+
+### Features
+
+* **spending-type:** add spending type ([6867172](https://github.com/Investiway/investiway-back/commit/6867172c92386d3e96c7357f94e0e738cb159363))
+
 ## [1.5.0](https://github.com/Investiway/investiway-back/compare/v1.4.2...v1.5.0) (2023-04-21)
 
 

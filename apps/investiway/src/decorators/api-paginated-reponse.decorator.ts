@@ -3,13 +3,11 @@ import { ApiExtraModels, ApiOkResponse, getSchemaPath } from '@nestjs/swagger';
 import { PageDto } from 'src/dtos/page.dto';
 import { ResponseSuccessDto } from '../dtos/response.dto';
 
-export const ApiPaginatedResponse = <TModel extends Type<any>>(
-  model: TModel,
-) => {
+export const ApiPaginatedResponse = (...model: Type<any>[]) => {
   return applyDecorators(
     ApiExtraModels(ResponseSuccessDto),
     ApiExtraModels(PageDto),
-    ApiExtraModels(model),
+    ApiExtraModels(...model),
     ApiOkResponse({
       schema: {
         allOf: [
@@ -17,13 +15,21 @@ export const ApiPaginatedResponse = <TModel extends Type<any>>(
           {
             properties: {
               result: {
-                $ref: getSchemaPath(PageDto),
-                properties: {
-                  data: {
-                    type: 'array',
-                    items: { $ref: getSchemaPath(model) },
+                allOf: [
+                  { $ref: getSchemaPath(PageDto) },
+                  {
+                    properties: {
+                      data: {
+                        type: 'array',
+                        items: {
+                          allOf: model.map((m) => ({
+                            $ref: getSchemaPath(m),
+                          })),
+                        },
+                      },
+                    },
                   },
-                },
+                ],
               },
             },
           },
@@ -32,4 +38,3 @@ export const ApiPaginatedResponse = <TModel extends Type<any>>(
     }),
   );
 };
-1;

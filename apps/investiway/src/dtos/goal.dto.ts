@@ -13,6 +13,7 @@ import { IsObjectId } from '../validators/is-object-id.validate';
 import { MAX_NUMBER } from 'src/utils/common.util';
 
 export class GoalExtends {
+  @ApiProperty()
   goalTypeName: string;
 }
 

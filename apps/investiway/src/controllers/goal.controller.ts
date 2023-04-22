@@ -27,6 +27,7 @@ import {
   GoalCreateOrEditBody,
   GoalCreateOrEditParams,
   GoalDeleteParams,
+  GoalExtends,
   GoalGetOneParams,
   GoalSearchQuery,
 } from 'src/dtos/goal.dto';
@@ -52,7 +53,7 @@ export class GoalController {
       [{ clazz: 'userId', request: 'userId' }],
     ),
   )
-  @ApiPaginatedResponse(Goal)
+  @ApiPaginatedResponse(Goal, GoalExtends)
   search(
     @Query() search: GoalSearchQuery,
     @Query() page: PageOptionsDto,
@@ -63,8 +64,8 @@ export class GoalController {
 
   @Get(':id')
   @CheckCasl((ability) => ability.can(CaslAction.Read, Goal))
-  @ApiSuccessResponse(Goal)
   @UseInterceptors(ResponseIntercept)
+  @ApiSuccessResponse(Goal, GoalExtends)
   getOne(@Param() params: GoalGetOneParams, @GetUser() user: User) {
     return this.goalService.getById(params.id, user);
   }
@@ -78,7 +79,7 @@ export class GoalController {
       [{ clazz: 'userId', request: 'userId' }],
     ),
   )
-  @ApiSuccessResponse(Goal)
+  @ApiSuccessResponse(Goal, GoalExtends)
   insert(@Body() data: GoalCreateOrEditBody, @GetUser() user: User) {
     return this.goalService.insert(data, user);
   }

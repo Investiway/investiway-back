@@ -5,6 +5,7 @@ import { User, UserSchema } from './user.schema';
 import { GoalType, GoalTypeSchema } from './goal-type.schema';
 import { Goal, GoalSchema } from './goal.schema';
 import { Note, NoteSchema } from './note.schema';
+import { SpendingType, SpendingTypeSchema } from './spending-type.schema';
 
 export const features: ModelDefinition[] = [
   {
@@ -22,6 +23,10 @@ export const features: ModelDefinition[] = [
   {
     name: Note.name,
     schema: NoteSchema,
+  },
+  {
+    name: SpendingType.name,
+    schema: SpendingTypeSchema,
   },
 ];
 

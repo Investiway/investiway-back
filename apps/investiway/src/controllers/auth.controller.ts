@@ -93,7 +93,7 @@ export class AuthController {
       const user = (req as any).user?.['user'];
       const token = await this.authService.loginWithSocial(
         plainToClass(FacebookAuthDto, {
-          facebookId: user['facebookId'],
+          facebookId: user['googleId'] || user['email'],
           email: user['email'],
           lastName: user['lastName'],
           firstName: user['firstName'],

@@ -21,7 +21,7 @@ export const caslObject2String = <T>(
   ...keys: (keyof T)[]
 ) => {
   const on = keys.reduce((val, item) => {
-    val[item] = val[item].toString() as any;
+    val[item] = val[item]?.toString() as any;
     return val;
   }, data);
   return plainToClass(clazz, on);

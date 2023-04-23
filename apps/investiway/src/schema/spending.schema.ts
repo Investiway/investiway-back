@@ -11,15 +11,19 @@ export type SpendingDocument = HydratedDocument<Spending>;
 export class Spending extends SchemaDto {
   @ApiProperty()
   @Prop()
-  name: string;
+  description: string;
 
   @ApiProperty()
   @Prop()
-  description: string;
+  amount: number;
 
   @ApiProperty({ type: String })
   @Prop({ type: Types.ObjectId })
   userId: ObjectId;
+
+  @ApiProperty({ type: String })
+  @Prop({ type: Types.ObjectId })
+  spendingTypeId: ObjectId;
 
   @ApiProperty({ type: Date })
   @Prop()

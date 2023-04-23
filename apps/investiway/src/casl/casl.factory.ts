@@ -11,10 +11,15 @@ import { GoalType } from '../schema/goal-type.schema';
 import { Goal } from 'src/schema/goal.schema';
 import { Note } from 'src/schema/note.schema';
 import { SpendingType } from 'src/schema/spending-type.schema';
+import { Spending } from 'src/schema/spending.schema';
 
 type Subjects =
   | InferSubjects<
-      typeof User | typeof GoalType | typeof Goal | typeof SpendingType
+      | typeof User
+      | typeof GoalType
+      | typeof Goal
+      | typeof SpendingType
+      | typeof Spending
     >
   | 'all';
 
@@ -51,6 +56,12 @@ export class CaslAppFactory {
     can(CaslAction.Update, SpendingType, { userId });
     can(CaslAction.Delete, SpendingType, { userId });
     can(CaslAction.Create, SpendingType, { userId });
+
+    // spending type
+    can(CaslAction.Read, Spending, { userId });
+    can(CaslAction.Update, Spending, { userId });
+    can(CaslAction.Delete, Spending, { userId });
+    can(CaslAction.Create, Spending, { userId });
 
     return build({
       detectSubjectType: (item) =>

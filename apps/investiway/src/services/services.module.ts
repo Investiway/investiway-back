@@ -9,6 +9,7 @@ import { CaslAppFactory } from 'src/casl/casl.factory';
 import { GoalService } from './goal.service';
 import { NoteService } from './note.service';
 import { SpendingTypeService } from './spending-type.service';
+import { SpendingService } from './spending.service';
 
 const services = [
   AuthService,
@@ -17,6 +18,7 @@ const services = [
   GoalService,
   NoteService,
   SpendingTypeService,
+  SpendingService,
 ];
 
 @Module({

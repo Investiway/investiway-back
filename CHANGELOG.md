@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/Investiway/investiway-back/compare/v1.6.1...v1.7.0) (2023-04-23)
+
+
+### Features
+
+* **goal:** support query foreign schema ([5c8ba9a](https://github.com/Investiway/investiway-back/commit/5c8ba9a8010e63d967e3da4f937dd9b2c7d9c167))
+* **swagger:** support schema extend for ApiPaginatedResponse, ApiSuccessResponse ([a31ce37](https://github.com/Investiway/investiway-back/commit/a31ce371639abde2c44a4b7b9a5623a93057e8a1))
+
 ### [1.6.1](https://github.com/Investiway/investiway-back/compare/v1.6.0...v1.6.1) (2023-04-22)
 
 

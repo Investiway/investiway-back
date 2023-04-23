@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.7.1](https://github.com/Investiway/investiway-back/compare/v1.7.0...v1.7.1) (2023-04-23)
+
+
+### Bug Fixes
+
+* **auth:** empty facebookId when login with facebook ([f7d8630](https://github.com/Investiway/investiway-back/commit/f7d863056b5429c84f44000dc732d5457a63e4e2))
+
 ## [1.7.0](https://github.com/Investiway/investiway-back/compare/v1.6.1...v1.7.0) (2023-04-23)
 
 

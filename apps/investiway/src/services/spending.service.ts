@@ -79,7 +79,7 @@ export class SpendingService {
     if (search.endDate) {
       const f = {
         createdAt: {
-          $lte: moment(search.startDate).toDate(),
+          $lte: moment(search.endDate).toDate(),
         },
       };
       if (filterDate.$and.length) {
@@ -88,7 +88,7 @@ export class SpendingService {
         filterDate = f;
       }
     }
-    if (search.startDate && search.endDate) {
+    if (search.startDate || search.endDate) {
       pipeline.push({
         $match: filterDate,
       });

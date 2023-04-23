@@ -72,7 +72,12 @@ export class GoalService {
     if (
       casl.cannot(
         CaslAction.Read,
-        caslObject2String(Goal, convert<Goal>(caslObject), 'userId'),
+        caslObject2String(
+          Goal,
+          convert<Goal>(caslObject),
+          'userId',
+          'goalTypeId',
+        ),
       )
     ) {
       throw new ForbiddenException();
@@ -125,7 +130,7 @@ export class GoalService {
     const casl = this.caslAppFactory.createForUser(authorizator);
     const authroization = casl.cannot(
       caslAction,
-      caslObject2String(Goal, convert<Goal>(r), 'userId'),
+      caslObject2String(Goal, convert<Goal>(r), 'userId', 'goalTypeId'),
     );
     if (authroization) {
       throw new ForbiddenException();

@@ -5,14 +5,14 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../schema/user.schema';
-import { Model, PipelineStage } from 'mongoose';
+import { FilterQuery, Model, PipelineStage } from 'mongoose';
 import { Types } from 'mongoose';
-import { Goal, GoalDocument } from '../schema/goal.schema';
+import { Spending, SpendingDocument } from '../schema/spending.schema';
 import {
-  GoalCreateOrEditBody,
-  GoalExtends,
-  GoalSearchQuery,
-} from '../dtos/goal.dto';
+  SpendingCreateOrEditBody,
+  SpendingExtends,
+  SpendingSearchQuery,
+} from '../dtos/spending.dto';
 import {
   PageDto,
   PageMetaDto,
@@ -28,26 +28,26 @@ import {
 } from 'src/utils/common.util';
 import { CaslAppFactory } from 'src/casl/casl.factory';
 import { CaslAction } from 'src/casl/casl.enum';
-import { GoalTypeService } from './goal-type.service';
+import { SpendingTypeService } from './spending-type.service';
 import * as moment from 'moment';
-import { GoalType } from 'src/schema/goal-type.schema';
+import { SpendingType } from 'src/schema/spending-type.schema';
 
 @Injectable()
-export class GoalService {
+export class SpendingService {
   constructor(
-    @InjectModel(Goal.name) private goalModel: Model<GoalDocument>,
+    @InjectModel(Spending.name) private spendingModel: Model<SpendingDocument>,
     private readonly caslAppFactory: CaslAppFactory,
-    private readonly goalTypeService: GoalTypeService,
+    private readonly goalTypeService: SpendingTypeService,
   ) {}
 
   async search(
-    search: GoalSearchQuery,
+    search: SpendingSearchQuery,
     page: PageOptionsDto,
     authorizator: User,
   ) {
     // casl can't inside scope, because controller checked
     const pipeline: PipelineStage[] = [];
-    const caslObject: Partial<Goal> = {};
+    const caslObject: Partial<Spending> = {};
     if (search.userId) {
       const userId = new Types.ObjectId(search.userId);
       pipeline.push({
@@ -55,17 +55,43 @@ export class GoalService {
       });
       caslObject.userId = userId as any;
     }
-    if (search.goalTypeId) {
+    if (search.spendingTypeId) {
       await this.goalTypeService.checkAuthorization(
-        search.goalTypeId,
+        search.spendingTypeId,
         authorizator,
         CaslAction.Read,
       );
-      const goalTypeId = new Types.ObjectId(search.goalTypeId);
+      const spendingTypeId = new Types.ObjectId(search.spendingTypeId);
       pipeline.push({
-        $match: { goalTypeId },
+        $match: { spendingTypeId },
       });
-      caslObject.goalTypeId = goalTypeId as any;
+      caslObject.spendingTypeId = spendingTypeId as any;
+    }
+
+    let filterDate: FilterQuery<any> = { $and: [] };
+    if (search.startDate) {
+      filterDate.$and.push({
+        createdAt: {
+          $gte: moment(search.startDate).toDate(),
+        },
+      });
+    }
+    if (search.endDate) {
+      const f = {
+        createdAt: {
+          $lte: moment(search.endDate).toDate(),
+        },
+      };
+      if (filterDate.$and.length) {
+        filterDate.$and.push(f);
+      } else {
+        filterDate = f;
+      }
+    }
+    if (search.startDate || search.endDate) {
+      pipeline.push({
+        $match: filterDate,
+      });
     }
 
     const casl = this.caslAppFactory.createForUser(authorizator);
@@ -73,10 +99,10 @@ export class GoalService {
       casl.cannot(
         CaslAction.Read,
         caslObject2String(
-          Goal,
-          convert<Goal>(caslObject),
+          Spending,
+          convert<Spending>(caslObject),
           'userId',
-          'goalTypeId',
+          'spendingTypeId',
         ),
       )
     ) {
@@ -91,18 +117,18 @@ export class GoalService {
       });
     }
     pipeline.push(SchemaUtils.getMatchIsNotDelete());
-    const total = await PageUtils.countItems(this.goalModel, pipeline);
+    const total = await PageUtils.countItems(this.spendingModel, pipeline);
 
     PageUtils.pushLimitAndOrder(pipeline, page);
     this.pushDep2Root(pipeline);
-    const data = await this.goalModel.aggregate(pipeline).exec();
+    const data = await this.spendingModel.aggregate(pipeline).exec();
     const pageMetaParamsDto = new PageMetaDtoParameters(page, total);
     const pageMetaDto = new PageMetaDto(pageMetaParamsDto);
     const result = new PageDto(data, pageMetaDto);
     return result;
   }
 
-  getById(id: string, authorizator: User): Promise<Goal> {
+  getById(id: string, authorizator: User): Promise<Spending> {
     return this.checkAuthorization(id, authorizator, CaslAction.Read, true);
   }
 
@@ -122,7 +148,7 @@ export class GoalService {
     if (isDep) {
       this.pushDep2Root(pipeline);
     }
-    const aggResult = await this.goalModel.aggregate(pipeline).exec();
+    const aggResult = await this.spendingModel.aggregate(pipeline).exec();
     const r = aggResult?.[0];
     if (!r) {
       throw new NotFoundException();
@@ -130,7 +156,12 @@ export class GoalService {
     const casl = this.caslAppFactory.createForUser(authorizator);
     const authroization = casl.cannot(
       caslAction,
-      caslObject2String(Goal, convert<Goal>(r), 'userId', 'goalTypeId'),
+      caslObject2String(
+        Spending,
+        convert<Spending>(r),
+        'userId',
+        'spendingTypeId',
+      ),
     );
     if (authroization) {
       throw new ForbiddenException();
@@ -141,7 +172,7 @@ export class GoalService {
   async softDelete(id: string, authorizator: User) {
     // casl authorizator
     await this.checkAuthorization(id, authorizator, CaslAction.Delete);
-    return await this.goalModel.updateOne(
+    return await this.spendingModel.updateOne(
       SchemaUtils.getIsNotDelete({
         _id: new Types.ObjectId(id),
       }),
@@ -153,66 +184,50 @@ export class GoalService {
     );
   }
 
-  async insert(data: GoalCreateOrEditBody, authorizator: User) {
+  async insert(data: SpendingCreateOrEditBody, authorizator: User) {
     // casl can't inside scope, because controller checked
     await this.goalTypeService.checkAuthorization(
-      data.goalTypeId,
+      data.spendingTypeId,
       authorizator,
       CaslAction.Create,
     );
 
-    const amountMinimumPerMonth = this.computeAmountPerMonth(data);
-    const goal = await this.goalModel
-      .insertMany([
-        {
-          ...convertToObjectId(data, 'userId', 'goalTypeId'),
-          amountMinimumPerMonth,
-        },
-      ])
+    const goal = await this.spendingModel
+      .insertMany([convertToObjectId(data, 'userId', 'spendingTypeId')])
       .then((r) => r?.[0]);
 
     return this.getById(goal._id, authorizator);
   }
 
-  async update(id: string, data: GoalCreateOrEditBody, authorizator: User) {
+  async update(id: string, data: SpendingCreateOrEditBody, authorizator: User) {
     // casl authorizator, data can't check authroization 'userid' because check inside controller
     await this.checkAuthorization(id, authorizator, CaslAction.Update);
     await this.goalTypeService.checkAuthorization(
-      data.goalTypeId,
+      data.spendingTypeId,
       authorizator,
       CaslAction.Read,
     );
 
-    const amountMinimumPerMonth = this.computeAmountPerMonth(data);
-    return await this.goalModel.updateOne(
+    return await this.spendingModel.updateOne(
       SchemaUtils.getIsNotDelete({
         _id: new Types.ObjectId(id),
       }),
       {
-        $set: {
-          ...convertToObjectId(data, 'userId', 'goalTypeId'),
-          amountMinimumPerMonth,
-        },
+        $set: convertToObjectId(data, 'userId', 'spendingTypeId'),
       },
     );
   }
 
-  private computeAmountPerMonth(data: GoalCreateOrEditBody): number {
-    const target = moment(data.completeDate);
-    const month = target.diff(moment(), 'month');
-    return Math.round(data.amountTarget / Math.max(1, month));
-  }
-
   private pushDep2Root(pipeline: PipelineStage[]) {
-    SchemaUtils.pushLookup2Root<Goal, GoalType, GoalExtends>(
+    SchemaUtils.pushLookup2Root<Spending, SpendingType, SpendingExtends>(
       pipeline,
-      GoalType,
+      SpendingType,
       {
-        localField: 'goalTypeId',
+        localField: 'spendingTypeId',
         foreignKey: '_id',
       },
       {
-        goalTypeName: 'name',
+        spendingTypeName: 'name',
       },
     );
   }

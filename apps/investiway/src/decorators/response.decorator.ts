@@ -7,10 +7,10 @@ import {
 } from '@nestjs/swagger';
 import { ResponseErrorDto, ResponseSuccessDto } from '../dtos/response.dto';
 
-export const ApiSuccessResponse = <TModel extends Type<any>>(model: TModel) => {
+export const ApiSuccessResponse = (...model: Type<any>[]) => {
   return applyDecorators(
     ApiExtraModels(ResponseSuccessDto),
-    ApiExtraModels(model),
+    ApiExtraModels(...model),
     ApiOkResponse({
       schema: {
         allOf: [
@@ -18,7 +18,9 @@ export const ApiSuccessResponse = <TModel extends Type<any>>(model: TModel) => {
           {
             properties: {
               result: {
-                $ref: getSchemaPath(model),
+                allOf: model.map((m) => ({
+                  $ref: getSchemaPath(m),
+                })),
               },
             },
           },
@@ -28,7 +30,7 @@ export const ApiSuccessResponse = <TModel extends Type<any>>(model: TModel) => {
   );
 };
 
-export const ApiErrorResponse = <TModel extends Type<any>>(
+export const ApiErrorResponse = (
   decorator: (options?: ApiResponseOptions) => MethodDecorator & ClassDecorator,
 ) => {
   return applyDecorators(

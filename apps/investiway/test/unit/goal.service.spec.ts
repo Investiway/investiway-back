@@ -5,14 +5,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { features } from 'src/schema/schema.module';
 import { GoalService } from 'src/services/goal.service';
 import { Model, Types } from 'mongoose';
-import { Goal, GoalDocument } from 'src/schema/goal.schema';
+import { Goal } from 'src/schema/goal.schema';
 import { CaslAppFactory } from 'src/casl/casl.factory';
-import { GoalCreateOrEditBody, GoalSearchQuery } from 'src/dtos/goal.dto';
+import { GoalSearchQuery } from 'src/dtos/goal.dto';
 import { PageOptionsDto } from 'src/dtos/page.dto';
 import { plainToClass } from 'class-transformer';
 import { PageMetaDto } from 'src/dtos/page.dto';
 import { User } from 'src/schema/user.schema';
-import { caslObject2String, convert } from 'src/utils/common.util';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import * as moment from 'moment';
 import { GoalType } from 'src/schema/goal-type.schema';
@@ -85,7 +84,7 @@ describe('GoalService', () => {
         amountTarget: 100,
         completeDate: moment().add(1, 'month').toDate(),
         deleteAt: new Date(),
-        typeId: s2id(gtDeleteExcepted._id.toString()) as any,
+        goalTypeId: s2id(gtDeleteExcepted._id.toString()) as any,
       },
       {
         userId: s2id(userIdUnExcepted) as any,
@@ -93,7 +92,7 @@ describe('GoalService', () => {
         description: 'gt description unexcepted',
         amountTarget: 100,
         completeDate: moment().add(1, 'month').toDate(),
-        typeId: s2id(gtUnexcepted._id.toString()) as any,
+        goalTypeId: s2id(gtUnexcepted._id.toString()) as any,
       },
     ];
     await goalModel.deleteMany({});
@@ -105,7 +104,7 @@ describe('GoalService', () => {
         description: 'gt description ' + index,
         amountTarget: 100,
         completeDate: moment().add(1, 'month').toDate(),
-        typeId: s2id(gtExcepted._id.toString()),
+        goalTypeId: s2id(gtExcepted._id.toString()),
       })),
     );
     gExcepted = ds as unknown as Goal[];
@@ -205,7 +204,7 @@ describe('GoalService', () => {
     const search = plainToClass(GoalSearchQuery, {
       search: 'name 3',
       userId: userIdExcepted,
-      typeId: gtExcepted._id.toString(),
+      goalTypeId: gtExcepted._id.toString(),
     } as Partial<GoalSearchQuery>);
     const authorizator = {
       _id: s2id(userIdExcepted) as any,
@@ -233,7 +232,7 @@ describe('GoalService', () => {
     const search = plainToClass(GoalSearchQuery, {
       search: 'name 3',
       userId: userIdExcepted,
-      typeId: gtUnexcepted._id.toString(),
+      goalTypeId: gtUnexcepted._id.toString(),
     } as Partial<GoalSearchQuery>);
     const authorizator = {
       _id: s2id(userIdExcepted) as any,
@@ -256,7 +255,7 @@ describe('GoalService', () => {
     const search = plainToClass(GoalSearchQuery, {
       search: 'name 3',
       userId: userIdExcepted,
-      typeId: gtDeleteExcepted._id.toString(),
+      goalTypeId: gtDeleteExcepted._id.toString(),
     } as Partial<GoalSearchQuery>);
     const authorizator = {
       _id: s2id(userIdExcepted) as any,

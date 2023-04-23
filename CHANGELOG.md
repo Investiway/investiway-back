@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/Investiway/investiway-back/compare/v1.7.1...v1.8.0) (2023-04-23)
+
+
+### Features
+
+* **spending:** CRUD spending & casl ([61e63f6](https://github.com/Investiway/investiway-back/commit/61e63f631f8113dc39c660a6d96fd10ac68fc003))
+
+
+### Bug Fixes
+
+* **goal:** fix cast goal caslObject2String goalTypeId ([ebc0266](https://github.com/Investiway/investiway-back/commit/ebc02665c73d31e46e6aa259503d9d5bb1005a5d))
+* **spending:** search start & end date ([bef4729](https://github.com/Investiway/investiway-back/commit/bef472977400f5bb78f601b4cab004ca450caefe))
+* **utils:** caslObject2String on field null ([7c96fee](https://github.com/Investiway/investiway-back/commit/7c96fee79992d15c66ddd1277e5310a1eda6d061))
+
 ### [1.7.1](https://github.com/Investiway/investiway-back/compare/v1.7.0...v1.7.1) (2023-04-23)
 
 

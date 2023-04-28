@@ -48,4 +48,8 @@ export class SchemaUtils {
       $unset: lkField,
     });
   }
+
+  static getCreatedAt(data: any) {
+    return data.createdAt || new Date();
+  }
 }

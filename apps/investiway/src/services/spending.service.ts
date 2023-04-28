@@ -1,11 +1,12 @@
 import {
   ForbiddenException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
+import { InjectConnection, InjectModel } from '@nestjs/mongoose';
 import { User } from '../schema/user.schema';
-import { FilterQuery, Model, PipelineStage } from 'mongoose';
+import mongoose, { FilterQuery, Model, PipelineStage } from 'mongoose';
 import { Types } from 'mongoose';
 import { Spending, SpendingDocument } from '../schema/spending.schema';
 import {
@@ -31,13 +32,18 @@ import { CaslAction } from 'src/casl/casl.enum';
 import { SpendingTypeService } from './spending-type.service';
 import * as moment from 'moment';
 import { SpendingType } from 'src/schema/spending-type.schema';
+import { SpendingStsService } from './spending-sts.service';
 
 @Injectable()
 export class SpendingService {
+  private readonly logger = new Logger('SpendingService');
+
   constructor(
     @InjectModel(Spending.name) private spendingModel: Model<SpendingDocument>,
+    @InjectConnection() private readonly mongoConnection: mongoose.Connection,
     private readonly caslAppFactory: CaslAppFactory,
     private readonly goalTypeService: SpendingTypeService,
+    private readonly spendingStsService: SpendingStsService,
   ) {}
 
   async search(
@@ -171,8 +177,12 @@ export class SpendingService {
 
   async softDelete(id: string, authorizator: User) {
     // casl authorizator
-    await this.checkAuthorization(id, authorizator, CaslAction.Delete);
-    return await this.spendingModel.updateOne(
+    const spending = await this.checkAuthorization(
+      id,
+      authorizator,
+      CaslAction.Delete,
+    );
+    const result = await this.spendingModel.updateOne(
       SchemaUtils.getIsNotDelete({
         _id: new Types.ObjectId(id),
       }),
@@ -182,10 +192,11 @@ export class SpendingService {
         },
       },
     );
+    await this.spendingStsService.deleteRowSpending(spending);
+    return result;
   }
 
   async insert(data: SpendingCreateOrEditBody, authorizator: User) {
-    // casl can't inside scope, because controller checked
     await this.goalTypeService.checkAuthorization(
       data.spendingTypeId,
       authorizator,
@@ -196,19 +207,24 @@ export class SpendingService {
       .insertMany([convertToObjectId(data, 'userId', 'spendingTypeId')])
       .then((r) => r?.[0]);
 
-    return this.getById(goal._id, authorizator);
+    const result = await this.getById(goal._id, authorizator);
+    await this.spendingStsService.pushRowSpending(result);
+    return result;
   }
 
   async update(id: string, data: SpendingCreateOrEditBody, authorizator: User) {
-    // casl authorizator, data can't check authroization 'userid' because check inside controller
-    await this.checkAuthorization(id, authorizator, CaslAction.Update);
+    const spendingOld = await this.checkAuthorization(
+      id,
+      authorizator,
+      CaslAction.Update,
+    );
     await this.goalTypeService.checkAuthorization(
       data.spendingTypeId,
       authorizator,
       CaslAction.Read,
     );
 
-    return await this.spendingModel.updateOne(
+    const result = await this.spendingModel.updateOne(
       SchemaUtils.getIsNotDelete({
         _id: new Types.ObjectId(id),
       }),
@@ -216,6 +232,10 @@ export class SpendingService {
         $set: convertToObjectId(data, 'userId', 'spendingTypeId'),
       },
     );
+
+    const spendingNew = { ...spendingOld, ...(data as any) };
+    await this.spendingStsService.updateRowSpending(spendingOld, spendingNew);
+    return result;
   }
 
   private pushDep2Root(pipeline: PipelineStage[]) {

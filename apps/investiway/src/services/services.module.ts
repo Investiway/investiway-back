@@ -10,6 +10,7 @@ import { GoalService } from './goal.service';
 import { NoteService } from './note.service';
 import { SpendingTypeService } from './spending-type.service';
 import { SpendingService } from './spending.service';
+import { SpendingStsService } from './spending-sts.service';
 
 const services = [
   AuthService,
@@ -19,6 +20,7 @@ const services = [
   NoteService,
   SpendingTypeService,
   SpendingService,
+  SpendingStsService,
 ];
 
 @Module({

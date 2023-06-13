@@ -1,5 +1,4 @@
 [![Continuous Integration Testing](https://github.com/Investiway/investiway-back/actions/workflows/ci.yml/badge.svg)](https://github.com/Investiway/investiway-back/actions/workflows/ci.yml)
-[![Deploy Vercel](https://github.com/Investiway/investiway-back/actions/workflows/deploy.yml/badge.svg)](https://github.com/Investiway/investiway-back/actions/workflows/deploy.yml)
 <p align="center">
     <a href="https://investiway.vercel.app/">
         <img width="1046" src="documents/LOGO_Banner.png" alt="">

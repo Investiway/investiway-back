@@ -44,7 +44,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "express-basic-auth": "^1.2.1",
-    "mongoose": "^7.0.3",
+    "mongoose": "^7.3.3",
     "nodemailer": "^6.9.1",
     "passport": "^0.6.0",
     "passport-facebook": "^3.0.0",
